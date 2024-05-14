@@ -1,3 +1,13 @@
-from django.shortcuts import render
+from django.http import HttpResponse
 
-# Create your views here.
+
+def forex(request):
+    return HttpResponse("Forex Page")
+
+
+def stock(request):
+    return HttpResponse("Stock Page")
+
+
+def crypto(request):
+    return HttpResponse("Crypto Page")
