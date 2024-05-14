@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+<title>Listygo | Faq</title>
+
+{% endblock title %}
+
+{% block main %}
+<!-- Inne Page Banner Area Start Here -->
+<section class="inner-page-banner bg-common inner-page-top-margin overlay-dark-40"
+    data-bg-image="{% static 'base/img/figure/inner-page-banner1.jpg' %}">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumbs-area">
+                    <h1>Faq’s Page</h1>
+                    <ul>
+                        <li>
+                            <a href="{% url 'home' %}" >Home</a>
+                        </li>
+                        <li>Faq’s</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Inne Page Banner Area End Here -->
+<!-- Faq Content Area Start Here -->
+<section class="faq-wrap-layout1 padding-top-10 padding-bottom-10">
+    <div class="container">
+        <div class="section-heading heading-dark heading-center">
+            <div class="item-sub-title">Have you any kind of question, please feel free ask us.</div>
+            <h2 class="item-title">Frequently Ask Any Question</h2>
+        </div>
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-8 col-sm-9 col-12">
+                <div class="faq-box-layout1" id="accordion">
+                    {% for faq in faqs %}
+                    <div class="card single-item">
+                        <div class="card-header item-nav">
+                            <a class="collapsed" data-parent="#accordion" data-toggle="collapse"
+                            href="#collapse3">
+                        {{faq.question}}
+                            </a>
+                        </div>
+                        <div class="collapse item-content-wrap" data-parent="#accordion" id="collapse3">
+                            <div class="card-body item-content">
+                                <p>{{faq.answer}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Faq Content Area End Here -->
+{% endblock main %}
+

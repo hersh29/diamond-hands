@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+<title>Listygo | Home</title>
+{% endblock title %}
+
+{% block main %}
+<div style="background: #070F0C !important;">
+
+    <section class="main-banner-wrap-layout1 bg-common overlay-dark-30 bg--gradient-top-30"
+        style="background: #0A1611;">
+        <div class="container">
+            <div class="main-banner-box-layout1">
+                <h1 class="item-title">Start Back Testing</h1>
+                {% comment %} <p class="item-sub-title">Get your assests value today and tomorrow</p> {% endcomment %}
+                <ul class="item-ctg">
+                    <li>
+                        <a class="item-icon" href="{% url 'home' %}"><i class="fa-solid fa-arrow-trend-up"></i></a>
+                        <a class="ctg-title" href="{% url 'home' %}">Stock</a>
+                    </li>
+                    <li>
+                        <a class="item-icon" href="{% url 'home' %}"><i class="fa-brands fa-bitcoin"></i></a>
+                        <a class="ctg-title" href="{% url 'home' %}">Crypto</a>
+                    </li>
+                    <li>
+                        <a class="item-icon" href="{% url 'home' %}"><i class="fa-solid fa-circle-dollar-to-slot"></i></a>
+                        <a class="ctg-title" href="{% url 'home' %}">Forex</a>
+                    </li>
+                    {% comment %} <li class="d-none d-lg-block">
+                        <p>Select from here</p>
+                        <div class="item-img">
+                            <img alt="Arrow" src="{% static 'base/img/figure/arrow.png' %}" />
+                        </div>
+                    </li> {% endcomment %}
+                </ul>
+            </div>
+    
+        </div>
+    </section>
+    <section class="category-wrap-layout1 padding-top-9p6 padding-bottom-7 overlay-dark-70 parallaxie bg--dark" style="background:rgb(11, 23, 19) !important;">
+    <div class="container">
+        <div class="section-heading heading-light heading-center">
+            {% comment %} <div class="item-sub-title">Explore some of the best place by categories</div> {% endcomment %}
+            <h2 class="item-title">Our Features</h2>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="category-box-layout1">
+                    <div class="item-icon" style="box-shadow:none;">
+                        <i class="flaticon-earth"></i>
+                    </div>
+                    <h3 class="item-title"><a style="color:white">Future Oriented</a></h3>
+                    <div class="home-number" style="color:white;">We do all about future. We care for you. </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="category-box-layout1">
+                    <div class="item-icon" style="box-shadow:none;">
+                        <i class="flaticon-earth"></i>
+                    </div>
+                    <h3 class="item-title"><a style="color:white">Future Oriented</a></h3>
+                    <div class="home-number" style="color:white;">We do all about future. We care for you. </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="category-box-layout1">
+                    <div class="item-icon" style="box-shadow:none;">
+                        <i class="flaticon-earth"></i>
+                    </div>
+                    <h3 class="item-title"><a style="color:white">Future Oriented</a></h3>
+                    <div class="home-number" style="color:white;">We do all about future. We care for you. </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="category-box-layout1">
+                    <div class="item-icon" style="box-shadow:none;">
+                        <i class="flaticon-earth"></i>
+                    </div>
+                    <h3 class="item-title"><a style="color:white">Future Oriented</a></h3>
+                    <div class="home-number" style="color:white;">We do all about future. We care for you. </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</div>
+
+<style>
+    .category-box-layout1:hover {
+        cursor: pointer;
+    }
+    .category-box-layout1 {
+        background: #10221B;
+    }
+    .item-icon:hover {
+        background: #3F8E8E;
+    }
+</style>
+
+{% endblock main %}
