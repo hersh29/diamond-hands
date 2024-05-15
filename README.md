@@ -1,4 +1,4 @@
-# Listygo
+# DiamondHands
 
 DiamondHands: A BackTesting Applicaiton
 
