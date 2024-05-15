@@ -6,10 +6,9 @@
 {% endblock title %}
 
 {% block main %}
-<div style="background: #070F0C !important;">
-
+<div style="background: #070F0C !important; padding-bottom:0 !important;">
     <section class="main-banner-wrap-layout1 bg-common overlay-dark-30 bg--gradient-top-30"
-        style="background: #0A1611;">
+        style="background: #0A1611; padding-bottom:0 !important;">
         <div class="container">
             <div class="main-banner-box-layout1">
                 <h1 class="item-title">Start Stock Backtesting</h1>
@@ -52,49 +51,41 @@
                 </form>
             </div>
         </div>
+        
     </section>
     <section class="category-wrap-layout1 padding-top-9p6 padding-bottom-7 overlay-dark-70 parallaxie bg--dark" style="background:rgb(11, 23, 19) !important;">
     <div class="container">
         <div class="section-heading heading-light heading-center">
             {% comment %} <div class="item-sub-title">Explore some of the best place by categories</div> {% endcomment %}
-            <h2 class="item-title">Our Features</h2>
+            <h2 class="item-title">Results</h2>
         </div>
         <div class="row">
-            <div class="col-lg-3 col-md-6">
+            <div class="col-lg-6 col-md-6">
                 <div class="category-box-layout1">
-                    <div class="item-icon" style="box-shadow:none;">
-                        <i class="flaticon-earth"></i>
-                    </div>
-                    <h3 class="item-title"><a style="color:white">Future Oriented</a></h3>
-                    <div class="home-number" style="color:white;">We do all about future. We care for you. </div>
+                    <h3 class="item-title"><a style="color:white">$1000</a></h3>
+                    <div class="home-number" style="color:white;">Your investment got you 12.5 shares at $80 per share of Apple on 01/01/2012</div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="col-lg-6 col-md-6">
                 <div class="category-box-layout1">
-                    <div class="item-icon" style="box-shadow:none;">
-                        <i class="flaticon-earth"></i>
-                    </div>
-                    <h3 class="item-title"><a style="color:white">Future Oriented</a></h3>
-                    <div class="home-number" style="color:white;">We do all about future. We care for you. </div>
+                    <h3 class="item-title"><a style="color:white">$1750</a></h3>
+                    <div class="home-number" style="color:white;">Selling your shares on 01/01/2020 at $140 per share gives you a $750 profit</div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="col-lg-6 col-md-6">
                 <div class="category-box-layout1">
-                    <div class="item-icon" style="box-shadow:none;">
-                        <i class="flaticon-earth"></i>
-                    </div>
-                    <h3 class="item-title"><a style="color:white">Future Oriented</a></h3>
-                    <div class="home-number" style="color:white;">We do all about future. We care for you. </div>
+                    <h3 class="item-title"><a style="color:white">7.25%</a></h3>
+                    <div class="home-number" style="color:white;">Year-over-year change</div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="col-lg-6 col-md-6">
                 <div class="category-box-layout1">
-                    <div class="item-icon" style="box-shadow:none;">
-                        <i class="flaticon-earth"></i>
-                    </div>
-                    <h3 class="item-title"><a style="color:white">Future Oriented</a></h3>
-                    <div class="home-number" style="color:white;">We do all about future. We care for you. </div>
+                    <h3 class="item-title"><a style="color:white">3.8%</a></h3>
+                    <div class="home-number" style="color:white;">Month-over-month change</div>
                 </div>
+            </div>
+            <div class="col-lg-12 col-md-12">
+                <canvas id="myChart"></canvas>
             </div>
         </div>
     </div>
@@ -180,5 +171,33 @@
         opacity: 0.5 !important;
     }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            datasets: [{
+                label: 'Return on investment',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
 
 {% endblock main %}
