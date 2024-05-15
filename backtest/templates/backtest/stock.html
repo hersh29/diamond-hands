@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+<title>DiamonHands | Crypto</title>
+{% endblock title %}
+
+{% block main %}
+<div style="background: #070F0C !important;">
+
+    <section class="main-banner-wrap-layout1 bg-common overlay-dark-30 bg--gradient-top-30"
+        style="background: #0A1611;">
+        <div class="container">
+            <div class="main-banner-box-layout1">
+                <h1 class="item-title">Start Stock Backtesting</h1>
+                <form id="category-search-form" class="category-search-form" method="post">
+                    {% csrf_token %}
+                    <ul class="form-items">
+                        <li>
+                            <div class="input-group stylish-input-group">
+                                {{form.stock}}
+                            </div>
+                        </li>
+                        <li>
+                            <div class="input-group stylish-input-group">
+                                {{form.amount}}
+                            </div>
+                        </li>
+                        <li>
+                            <div class="input-group stylish-input-group">
+                                {{form.rate}}
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="form-items">
+                        <li>
+                            <div class="input-group stylish-input-group">
+                                {{form.start_date}}
+                            </div>
+                        </li>
+                        <li>
+                            <div class="input-group stylish-input-group">
+                                {{form.end_date}}
+                            </div>
+                        </li>
+                        <li>
+                            <div class="form-group mb-0">
+                                <button type="submit" class="item-btn calc">Calculate</button>
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </section>
+    <section class="category-wrap-layout1 padding-top-9p6 padding-bottom-7 overlay-dark-70 parallaxie bg--dark" style="background:rgb(11, 23, 19) !important;">
+    <div class="container">
+        <div class="section-heading heading-light heading-center">
+            {% comment %} <div class="item-sub-title">Explore some of the best place by categories</div> {% endcomment %}
+            <h2 class="item-title">Our Features</h2>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="category-box-layout1">
+                    <div class="item-icon" style="box-shadow:none;">
+                        <i class="flaticon-earth"></i>
+                    </div>
+                    <h3 class="item-title"><a style="color:white">Future Oriented</a></h3>
+                    <div class="home-number" style="color:white;">We do all about future. We care for you. </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="category-box-layout1">
+                    <div class="item-icon" style="box-shadow:none;">
+                        <i class="flaticon-earth"></i>
+                    </div>
+                    <h3 class="item-title"><a style="color:white">Future Oriented</a></h3>
+                    <div class="home-number" style="color:white;">We do all about future. We care for you. </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="category-box-layout1">
+                    <div class="item-icon" style="box-shadow:none;">
+                        <i class="flaticon-earth"></i>
+                    </div>
+                    <h3 class="item-title"><a style="color:white">Future Oriented</a></h3>
+                    <div class="home-number" style="color:white;">We do all about future. We care for you. </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="category-box-layout1">
+                    <div class="item-icon" style="box-shadow:none;">
+                        <i class="flaticon-earth"></i>
+                    </div>
+                    <h3 class="item-title"><a style="color:white">Future Oriented</a></h3>
+                    <div class="home-number" style="color:white;">We do all about future. We care for you. </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let previousStartDate = document.querySelector('#id_start_date').value;
+        const startDate = document.querySelector('#id_start_date');
+        const endDate = document.querySelector('#id_end_date');
+        const rate = document.querySelector('#id_rate');
+        const form = document.querySelector('#category-search-form');
+
+        function checkDate() {
+            const today = new Date();
+            const selectedStartDate = new Date(startDate.value);
+            const selectedEndDate = new Date(endDate.value);
+
+            if (selectedStartDate > selectedEndDate) {
+                alert("Start date cannot be greater than end date.");
+                endDate.value = '';
+                return false;
+            }
+
+            previousStartDate = startDate.value;
+
+            if (selectedStartDate > today || selectedEndDate > today) {
+                rate.readOnly = false;
+                rate.required = true;
+                rate.classList.remove('low-opacity');
+            } else {
+                rate.readOnly = true;
+                rate.required = false;
+                rate.classList.add('low-opacity');
+            }
+        }
+
+        startDate.addEventListener('change', checkDate);
+        endDate.addEventListener('change', checkDate);
+        checkDate();
+    });
+</script>
+
+<style>
+    .category-box-layout1:hover {
+        cursor: pointer;
+    }
+    .category-box-layout1 {
+        background: #10221B;
+    }
+    .item-icon:hover {
+        background: #3F8E8E;
+    }
+
+    input{
+        background: #10221B !important;
+        color: #c0c0c0 !important;
+    }
+    
+    input::placeholder{
+        background: #10221B !important;
+        color: #c0c0c0 !important; 
+    }
+    .calc{
+        background:#3F8E8E !important;
+        color: whitesmoke !important;
+        font-size:18px !important;
+        border: none !important;
+    }
+    .calc:hover{
+        background:#2C6262 !important;
+    }
+    .assets_dropdown{
+            height: 50px;
+            padding: 0 20px;
+            background: #10221B !important;
+            color: #c0c0c0 !important; 
+            font-size: 14px;
+        
+    }
+
+    input.low-opacity {
+        opacity: 0.5 !important;
+    }
+</style>
+
+{% endblock main %}
