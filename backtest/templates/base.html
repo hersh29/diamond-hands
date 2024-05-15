@@ -87,7 +87,7 @@
                                     <li><a  href="{% url 'home' %}" style="background: #070F0C; color: white;" >Home</a></li>
                                     <li><a  href="{% url 'stock' %}"  style="background: #070F0C; color: white;">Stock</a></li>
                                     <li><a  href="{% url 'crypto' %}" style="background: #070F0C; color: white;" >Crypto</a></li>
-                                    <li><a  href="{% url 'home' %}" style="background: #070F0C; color: white;" >Forex</a></li>
+                                    <li><a  href="{% url 'forex' %}" style="background: #070F0C; color: white;" >Forex</a></li>
                                     {% comment %} <li><a  href="{% url 'about' %}" >About</a></li>
                                     <li>
                                         <a  href="{% url 'listing' %}" >Listing</a>
@@ -154,13 +154,13 @@
                         <div class="single-item col-lg-3 col-md-6 col-12">
                             <div class="footer-box">
                                 <div class="footer-header">
-                                    <h3>Products</h3>
+                                    <h3>Backtest</h3>
                                 </div>
                                 <div class="widget_nav_menu">
                                     <ul>
-                                        <li><a href="{% url 'home' %}">All Job</a></li>
-                                        <li><a href="{% url 'home' %}">Company</a></li>
-                                        <li><a href="{% url 'home' %}">Address</a></li>
+                                        <li><a href="{% url 'stock' %}">Stock</a></li>
+                                        <li><a href="{% url 'crypto' %}">Crypto</a></li>
+                                        <li><a href="{% url 'forex' %}">Forex</a></li>
                                         
                                     </ul>
                                 </div>
@@ -169,12 +169,11 @@
                         <div class="single-item col-lg-3 col-md-6 col-12">
                             <div class="footer-box">
                                 <div class="footer-header">
-                                    <h3>Support</h3>
+                                    <h3>Links</h3>
                                 </div>
                                 <div class="widget_nav_menu">
                                     <ul>
-                                        <li><a href="{% url 'home' %}">home</a></li>
-                                        <li><a href="{% url 'home' %}">Contact us</a></li>
+                                        <li><a href="{% url 'home' %}">Home</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -193,18 +192,6 @@
                                         <li><a href="#"><i class="fab fa-skype"></i></a></li>
                                     </ul>
                                 </div>
-                                {% comment %} <ul class="folow-us">
-                                    <li>
-                                        <a href="#">
-                                            <img alt="follow" src="{% static 'backtest/img/figure/follow1.jpg' %}" />
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <img alt="follow" src="{% static 'backtest/img/figure/follow2.jpg' %}" />
-                                        </a>
-                                    </li>
-                                </ul> {% endcomment %}
                             </div>
                         </div>
                     </div>
@@ -218,45 +205,7 @@
         </footer>
         <!-- Footer Area End Here -->
     </div>
-    <!-- Modal Start-->
-    <div class="modal fade" id="myModal" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="title-default-bold mb-none">Login</div>
-                    <button class="close" data-dismiss="modal" type="button">×</button>
-                </div>
-                <div class="modal-body">
-                    <form class="login-form">
-                        <input class="main-input-box" placeholder="User Name" type="text">
-                        <input class="main-input-box" placeholder="Password" type="password">
-                        <div class="inline-box mb-5 mt-4">
-                            <div class="checkbox checkbox-primary">
-                                <input id="checkbox1" type="checkbox" />
-                                <label for="checkbox1">Remember Me</label>
-                            </div>
-                            <label class="lost-password"><a href="#">Lost your password?</a></label>
-                        </div>
-                        <div class="inline-box mb-5 mt-4">
-                            <button class="btn-fill" type="submit" value="Login">Login</button>
-                            <a class="btn-register" href="{% url 'home' %}"><i class="fas fa-user"></i>Register Here!</a>
-                        </div>
-                        </input></input>
-                    </form>
-                    {% comment %} <label>Login connect with your Social Network</label>
-                    <div class="login-box-social">
-                        <ul>
-                            <li><a class="facebook" href="#"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a class="twitter" href="#"><i class="fab fa-twitter"></i></a></li>
-                            <li><a class="linkedin" href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                            <li><a class="google" href="#"><i class="fab fa-google-plus-g"></i></a></li>
-                        </ul>
-                    </div> {% endcomment %}
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal End-->
+
     <!-- Jquery Js -->
     <script src="{% static 'backtest/js/jquery-3.3.1.min.js' %}"></script>
     <!-- Bootstrap Js -->

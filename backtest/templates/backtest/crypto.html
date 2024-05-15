@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-<title>DiamonHands | Crypto</title>
+<title>DiamonHands | Crypto Backtesting</title>
 {% endblock title %}
 
 {% block main %}
@@ -13,65 +13,43 @@
         <div class="container">
             <div class="main-banner-box-layout1">
                 <h1 class="item-title">Start Crypto Backtesting</h1>
-                {% comment %} <p class="item-sub-title">Get your assests value today and tomorrow</p> {% endcomment %}
-                <form id="category-search-form" class="category-search-form">
+                <form id="category-search-form" class="category-search-form" method="post">
+                    {% csrf_token %}
                     <ul class="form-items">
                         <li>
                             <div class="input-group stylish-input-group">
-                                <input type="text" placeholder="Choose the stock" class="form-control"
-                                    name="website" id="form-website" data-error="Search text required" required>           
+                                {{form.stock}}
                             </div>
                         </li>
                         <li>
                             <div class="input-group stylish-input-group">
-                                <input type="email" placeholder="Enter the price" class="form-control" name="email"
-                                    id="form-email" data-error="Category name is required" required>  
+                                {{form.amount}}
                             </div>
                         </li>
                         <li>
                             <div class="input-group stylish-input-group">
-                                <input type="email" placeholder="Enter the required return" class="form-control" name="email"
-                                    id="form-email" data-error="Category name is required" required>
-                                <span class="input-group-addon">
-                                </span> 
+                                {{form.rate}}
                             </div>
                         </li>
-                      
                     </ul>
                     <ul class="form-items">
                         <li>
                             <div class="input-group stylish-input-group">
-                                <input type="date" placeholder="Choose the starting date" class="form-control"
-                                    name="website" id="form-website" data-error="Search text required" required>      
+                                {{form.start_date}}
                             </div>
                         </li>
                         <li>
                             <div class="input-group stylish-input-group">
-                                <input type="date" placeholder="Choose the ending date" class="form-control" name="email"
-                                    id="form-email" data-error="Category name is required" required>  
+                                {{form.end_date}}
                             </div>
                         </li>
                         <li>
                             <div class="form-group mb-0">
-                                <button type="submit" class="item-btn">Calculate</button>
+                                <button type="submit" class="item-btn calc">Calculate</button>
                             </div>
                         </li>
                     </ul>
                 </form>
-                {% comment %} <ul class="item-ctg">
-                    <li>
-                        <a class="item-icon" href="{% url 'home' %}"><i class="fa-solid fa-arrow-trend-up"></i></a>
-                        <a class="ctg-title" href="{% url 'home' %}">Stock</a>
-                    </li>
-                    <li>
-                        <a class="item-icon" href="{% url 'home' %}"><i class="fa-brands fa-bitcoin"></i></a>
-                        <a class="ctg-title" href="{% url 'home' %}">Crypto</a>
-                    </li>
-                    <li>
-                        <a class="item-icon" href="{% url 'home' %}"><i class="fa-solid fa-circle-dollar-to-slot"></i></a>
-                        <a class="ctg-title" href="{% url 'home' %}">Forex</a>
-                    </li>
-                </ul> {% endcomment %}
             </div>
         </div>
     </section>
@@ -122,6 +100,43 @@
     </div>
 </section>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let previousStartDate = document.querySelector('#id_start_date').value;
+        const startDate = document.querySelector('#id_start_date');
+        const endDate = document.querySelector('#id_end_date');
+        const rate = document.querySelector('#id_rate');
+        const form = document.querySelector('#category-search-form');
+
+        function checkDate() {
+            const today = new Date();
+            const selectedStartDate = new Date(startDate.value);
+            const selectedEndDate = new Date(endDate.value);
+
+            if (selectedStartDate > selectedEndDate) {
+                alert("Start date cannot be greater than end date.");
+                endDate.value = '';
+                return false;
+            }
+
+            previousStartDate = startDate.value;
+
+            if (selectedStartDate > today || selectedEndDate > today) {
+                rate.readOnly = false;
+                rate.required = true;
+                rate.classList.remove('low-opacity');
+            } else {
+                rate.readOnly = true;
+                rate.required = false;
+                rate.classList.add('low-opacity');
+            }
+        }
+
+        startDate.addEventListener('change', checkDate);
+        endDate.addEventListener('change', checkDate);
+        checkDate();
+    });
+</script>
 
 <style>
     .category-box-layout1:hover {
@@ -132,6 +147,37 @@
     }
     .item-icon:hover {
         background: #3F8E8E;
+    }
+
+    input{
+        background: #10221B !important;
+        color: #c0c0c0 !important;
+    }
+    
+    input::placeholder{
+        background: #10221B !important;
+        color: #c0c0c0 !important; 
+    }
+    .calc{
+        background:#3F8E8E !important;
+        color: whitesmoke !important;
+        font-size:18px !important;
+        border: none !important;
+    }
+    .calc:hover{
+        background:#2C6262 !important;
+    }
+    .assets_dropdown{
+            height: 50px;
+            padding: 0 20px;
+            background: #10221B !important;
+            color: #c0c0c0 !important; 
+            font-size: 14px;
+        
+    }
+
+    input.low-opacity {
+        opacity: 0.5 !important;
     }
 </style>
 
