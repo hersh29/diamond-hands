@@ -19,7 +19,6 @@ def stock(request):
             print(form.cleaned_data)
     else:
         form = StockForm()
-
     return render(request, "backtest/stock.html", {"form": form})
 
 
