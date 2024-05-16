@@ -51,46 +51,84 @@
                 </form>
             </div>
         </div>
-        
     </section>
+    {% if success %}
     <section class="category-wrap-layout1 padding-top-9p6 padding-bottom-7 overlay-dark-70 parallaxie bg--dark" style="background:rgb(11, 23, 19) !important;">
-    <div class="container">
-        <div class="section-heading heading-light heading-center">
-            {% comment %} <div class="item-sub-title">Explore some of the best place by categories</div> {% endcomment %}
-            <h2 class="item-title">Results</h2>
+        <div class="container">
+            <div class="section-heading heading-light heading-center">
+                {% comment %} <div class="item-sub-title">Explore some of the best place by categories</div> {% endcomment %}
+                <h2 class="item-title">Results</h2>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <div class="category-box-layout1">
+                        <h3 class="item-title"><a style="color:white">${{starting_amount}}</a></h3>
+                        <div class="home-number" style="color:white;">Your investment got you {{total_shares|floatformat:2}} shares at ${{start_opening_price}} per share of {{ stock }} on {{start_date}}</div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="category-box-layout1">
+                        <h3 class="item-title"><a style="color:white">${{ending_amount|floatformat:2}}</a></h3>
+                        <div class="home-number" style="color:white;">Selling your shares on {{end_date}} at ${{end_opening_price|floatformat:2}} per share gives you a ${{difference_in_amount|floatformat:2}} {{state}} amount at {{difference_in_percentage|floatformat:2}}% {{state}} rate</div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="category-box-layout1">
+                        <h3 class="item-title"><a style="color:white">{{yearly_return|floatformat:2}}%</a></h3>
+                        <div class="home-number" style="color:white;">Year-over-year change</div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="category-box-layout1">
+                        <h3 class="item-title"><a style="color:white">{{monthly_return|floatformat:2}}%</a></h3>
+                        <div class="home-number" style="color:white;">Month-over-month change</div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
         </div>
-        <div class="row">
-            <div class="col-lg-6 col-md-6">
-                <div class="category-box-layout1">
-                    <h3 class="item-title"><a style="color:white">$1000</a></h3>
-                    <div class="home-number" style="color:white;">Your investment got you 12.5 shares at $80 per share of Apple on 01/01/2012</div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="category-box-layout1">
-                    <h3 class="item-title"><a style="color:white">$1750</a></h3>
-                    <div class="home-number" style="color:white;">Selling your shares on 01/01/2020 at $140 per share gives you a $750 profit</div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="category-box-layout1">
-                    <h3 class="item-title"><a style="color:white">7.25%</a></h3>
-                    <div class="home-number" style="color:white;">Year-over-year change</div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="category-box-layout1">
-                    <h3 class="item-title"><a style="color:white">3.8%</a></h3>
-                    <div class="home-number" style="color:white;">Month-over-month change</div>
-                </div>
-            </div>
-            <div class="col-lg-12 col-md-12">
-                <canvas id="myChart"></canvas>
-            </div>
-        </div>
-    </div>
-</section>
+    </section>
+    {% endif %}
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    var period_values = {{ period_values|safe }};
+    var labels = period_values.map(function(item) {
+        return item[0];
+    });
+    var data = period_values.map(function(item) {
+        return item[1];
+    });
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Return on investment',
+                data: data,
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         let previousStartDate = document.querySelector('#id_start_date').value;
@@ -130,9 +168,7 @@
 </script>
 
 <style>
-    .category-box-layout1:hover {
-        cursor: pointer;
-    }
+  
     .category-box-layout1 {
         background: #10221B;
     }
@@ -172,32 +208,6 @@
     }
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            datasets: [{
-                label: 'Return on investment',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                fill: false,
-                borderColor: 'rgb(75, 192, 192)',
-                tension: 0.1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-</script>
 
 
 {% endblock main %}

@@ -6,13 +6,13 @@ from twelvedata import TDClient
 
 from .models import Stock, StockPrice
 
-API_KEY = "0430bc832afa407f8d10a4a1070e950d"
+API_KEY = "ecdb33a477a04200924abc5782580f36"
 td = TDClient(apikey=API_KEY)
 
 
 def save_stock_prices(symbol):
     INTERVAL = "1day"
-    START_DATE = datetime.strptime("2014-01-01", "%Y-%m-%d")
+    START_DATE = datetime.strptime("2016-01-01", "%Y-%m-%d")
     END_DATE = datetime.now()
 
     try:
