@@ -61,7 +61,6 @@ class Calculator:
                         break
                     on_date -= timedelta(days=1)
             else:
-                print(on_date)
                 price = StockPrice.objects.filter(
                     date=on_date, stock__symbol=self.symbol
                 ).first()

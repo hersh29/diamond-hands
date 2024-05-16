@@ -42,7 +42,6 @@ def stock(request):
                 "period_values": calculator.get_periods_values(),
                 "form": form,
             }
-            pprint(context)
             return render(request, "backtest/stock.html", context=context)
 
     else:
