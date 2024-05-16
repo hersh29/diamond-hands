@@ -60,6 +60,15 @@ class Calculator:
                     if fail_count > 3:
                         break
                     on_date -= timedelta(days=1)
+
+            elif on_date > date.today() and self.rate is not None:
+                current_price = self.day_opening_price(date.today() - timedelta(days=1))
+                years = Decimal((on_date - date.today()).days / 365)
+                percent_rate = self.rate / 100
+                future_price = current_price * (1 + percent_rate) ** years
+                print(future_price)
+                return future_price
+
             else:
                 price = StockPrice.objects.filter(
                     date=on_date, stock__symbol=self.symbol

@@ -63,7 +63,7 @@
                 <div class="col-lg-6 col-md-6">
                     <div class="category-box-layout1">
                         <h3 class="item-title"><a style="color:white">${{starting_amount}}</a></h3>
-                        <div class="home-number" style="color:white;">Your investment got you {{total_shares|floatformat:2}} shares at ${{start_opening_price}} per share of {{ stock }} on {{start_date}}</div>
+                        <div class="home-number" style="color:white;">Your investment got you {{total_shares|floatformat:2}} shares at ${{start_opening_price|floatformat:2}} per share of {{ stock }} on {{start_date}}</div>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
@@ -139,24 +139,34 @@
 
         function checkDate() {
             const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
             const selectedStartDate = new Date(startDate.value);
             const selectedEndDate = new Date(endDate.value);
 
+            if (selectedStartDate > tomorrow) {
+                alert("Start date cannot be in the future.");
+                startDate.value = '';
+                return false;
+            }
+
             if (selectedStartDate > selectedEndDate) {
-                alert("Start date cannot be greater than end date.");
+                alert("End date cannot be less than start date.");
                 endDate.value = '';
                 return false;
             }
 
             previousStartDate = startDate.value;
 
-            if (selectedStartDate > today || selectedEndDate > today) {
+            if (selectedStartDate > tomorrow || selectedEndDate > tomorrow) {
                 rate.readOnly = false;
                 rate.required = true;
                 rate.classList.remove('low-opacity');
             } else {
                 rate.readOnly = true;
                 rate.required = false;
+                rate.value=''
                 rate.classList.add('low-opacity');
             }
         }
