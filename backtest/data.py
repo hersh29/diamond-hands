@@ -1,4 +1,5 @@
-from datetime import datetime
+import time
+from datetime import datetime, timedelta
 
 from django.core.exceptions import ObjectDoesNotExist
 from twelvedata import TDClient
@@ -10,9 +11,9 @@ td = TDClient(apikey=API_KEY)
 
 
 def save_stock_prices(symbol):
-    START_DATE = "2024-05-01"
     INTERVAL = "1day"
-    today = datetime.now().strftime("%Y-%m-%d")
+    START_DATE = datetime.strptime("2014-01-01", "%Y-%m-%d")
+    END_DATE = datetime.now()
 
     try:
         stock = Stock.objects.get(symbol=symbol)
@@ -20,29 +21,39 @@ def save_stock_prices(symbol):
         print(f"Stock with symbol {symbol} does not exist.")
         return
 
-    prices = td.time_series(
-        symbol=symbol,
-        interval=INTERVAL,
-        start_date=START_DATE,
-        end_date=today,
-    ).as_json()
+    current_start_date = START_DATE
+    request_count = 0
+    while current_start_date < END_DATE:
+        current_end_date = current_start_date + timedelta(days=30)
+        if current_end_date > END_DATE:
+            current_end_date = END_DATE
 
-    for price in prices:
-        stock_price, created = StockPrice.objects.get_or_create(
-            stock=stock,
-            date=price["datetime"],
-            defaults={
-                "open": price["open"],
-                "high": price["high"],
-                "low": price["low"],
-                "close": price["close"],
-                "volume": price["volume"],
-            },
-        )
-        if created:
-            print(f"Created StockPrice for {price['datetime']}")
-        else:
-            print(f"StockPrice for {price['datetime']} already exists")
+        prices = td.time_series(
+            symbol=symbol,
+            interval=INTERVAL,
+            start_date=current_start_date.strftime("%Y-%m-%d"),
+            end_date=current_end_date.strftime("%Y-%m-%d"),
+        ).as_json()
 
+        for price in prices:
+            stock_price, created = StockPrice.objects.get_or_create(
+                stock=stock,
+                date=price["datetime"],
+                defaults={
+                    "open": price["open"],
+                    "high": price["high"],
+                    "low": price["low"],
+                    "close": price["close"],
+                    "volume": price["volume"],
+                },
+            )
+            if created:
+                print(f"Created StockPrice for {price['datetime']}")
+            else:
+                print(f"StockPrice for {price['datetime']} already exists")
 
-save_stock_prices(symbol="AAPL")
+        current_start_date += timedelta(days=31)  # Move the start date forward
+
+        request_count += 1
+        if request_count % 7 == 0:
+            time.sleep(60)
