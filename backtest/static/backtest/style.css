@@ -7190,7 +7190,7 @@ body>.listygo-tooltip .listygo-tooltip-bottom:after {
 }
 
 .single-listing-box-layout1 .listing-details-info .nav-tabs .nav-item a.active {
-  color: #111111;
+  color: white !important;
 }
 
 .single-listing-box-layout1 .listing-details-info .nav-tabs .nav-item a.active:after {
@@ -8083,7 +8083,7 @@ body>.listygo-tooltip .listygo-tooltip-bottom:after {
   right: 0;
   bottom: 0;
   z-index: 2;
-  background-color: #ff4a52;
+  background-color: #3F8E8E;
   -webkit-transition: all 0.3s ease-out;
   -moz-transition: all 0.3s ease-out;
   -ms-transition: all 0.3s ease-out;
@@ -8114,7 +8114,7 @@ body>.listygo-tooltip .listygo-tooltip-bottom:after {
 }
 
 .single-listing-box-layout2 .listing-details-menu .nav-tabs .nav-item a.active {
-  color: #111111;
+  color: white !important;
 }
 
 .single-listing-box-layout2 .listing-details-menu .nav-tabs .nav-item a.active:after {

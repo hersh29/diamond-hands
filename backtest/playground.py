@@ -3,7 +3,6 @@
 
 # from twelvedata import TDClient
 
-# API_KEY = "ecdb33a477a04200924abc5782580f36"
 
 # td = TDClient(apikey=API_KEY)
 # start_date = datetime.strptime("2014-01-01", "%Y-%m-%d")
@@ -55,35 +54,34 @@
 # datess = get_periods_date(start_date, end_date)
 # print(datess)
 
-from datetime import date, datetime, timedelta
-from pprint import pprint
+# from datetime import date, datetime, timedelta
+# from pprint import pprint
 
-from twelvedata import TDClient
+# from twelvedata import TDClient
 
-API_KEY = "ecdb33a477a04200924abc5782580f36"
-td = TDClient(apikey=API_KEY)
+# td = TDClient(apikey=API_KEY)
 
-start_date = datetime.strptime("2020-01-10", "%Y-%m-%d").date()
-
-
-def dummy():
-    start_date = datetime.strptime("2013-03-12", "%Y-%m-%d").date()
-    while True:
-        if start_date <= datetime(2022, 1, 1).date():
-            end_date = start_date + timedelta(days=1)
-            try:
-                price = td.time_series(
-                    symbol="AAPL",
-                    interval="1day",
-                    start_date=start_date,
-                    end_date=end_date,
-                ).as_json()
-                if price:
-                    print(price[0]["open"])
-                    return
-            except Exception as e:
-                pprint(e)
-                start_date -= timedelta(days=1)
+# start_date = datetime.strptime("2020-01-10", "%Y-%m-%d").date()
 
 
-dummy()
+# def dummy():
+#     start_date = datetime.strptime("2013-03-12", "%Y-%m-%d").date()
+#     while True:
+#         if start_date <= datetime(2022, 1, 1).date():
+#             end_date = start_date + timedelta(days=1)
+#             try:
+#                 price = td.time_series(
+#                     symbol="AAPL",
+#                     interval="1day",
+#                     start_date=start_date,
+#                     end_date=end_date,
+#                 ).as_json()
+#                 if price:
+#                     print(price[0]["open"])
+#                     return
+#             except Exception as e:
+#                 pprint(e)
+#                 start_date -= timedelta(days=1)
+
+
+# dummy()

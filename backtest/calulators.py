@@ -1,11 +1,10 @@
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 
+from django.conf import settings
 from twelvedata import TDClient
 
 from .models import StockPrice
-
-API_KEY = "ecdb33a477a04200924abc5782580f36"
 
 
 class Calculator:
@@ -19,7 +18,7 @@ class Calculator:
         self.symbol = symbol
         self.amount = amount
         self.rate = rate
-        self.td = TDClient(apikey=API_KEY)
+        self.td = TDClient(apikey=settings.TWELVE_API_KEY)
 
     def total_shares(self) -> float:
         """Get total shares based on start date"""

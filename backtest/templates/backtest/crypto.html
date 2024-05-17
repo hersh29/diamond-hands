@@ -2,17 +2,16 @@
 {% load static %}
 
 {% block title %}
-<title>DiamonHands | Crypto Backtesting</title>
+<title>DiamonHands | Stock Backtesting</title>
 {% endblock title %}
 
 {% block main %}
-<div style="background: #070F0C !important;">
-
+<div style="background: #070F0C !important; padding-bottom:0 !important;">
     <section class="main-banner-wrap-layout1 bg-common overlay-dark-30 bg--gradient-top-30"
-        style="background: #0A1611;">
+        style="background: #0A1611; padding-bottom:0 !important;">
         <div class="container">
             <div class="main-banner-box-layout1">
-                <h1 class="item-title">Start Crypto Backtesting</h1>
+                <h1 class="item-title">Start Stock Backtesting</h1>
                 <form id="category-search-form" class="category-search-form" method="post">
                     {% csrf_token %}
                     <ul class="form-items">
@@ -53,53 +52,83 @@
             </div>
         </div>
     </section>
+    {% if success %}
     <section class="category-wrap-layout1 padding-top-9p6 padding-bottom-7 overlay-dark-70 parallaxie bg--dark" style="background:rgb(11, 23, 19) !important;">
-    <div class="container">
-        <div class="section-heading heading-light heading-center">
-            {% comment %} <div class="item-sub-title">Explore some of the best place by categories</div> {% endcomment %}
-            <h2 class="item-title">Our Features</h2>
-        </div>
-        <div class="row">
-            <div class="col-lg-3 col-md-6">
-                <div class="category-box-layout1">
-                    <div class="item-icon" style="box-shadow:none;">
-                        <i class="flaticon-earth"></i>
-                    </div>
-                    <h3 class="item-title"><a style="color:white">Future Oriented</a></h3>
-                    <div class="home-number" style="color:white;">We do all about future. We care for you. </div>
-                </div>
+        <div class="container">
+            <div class="section-heading heading-light heading-center">
+                {% comment %} <div class="item-sub-title">Explore some of the best place by categories</div> {% endcomment %}
+                <h2 class="item-title">Results</h2>
             </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="category-box-layout1">
-                    <div class="item-icon" style="box-shadow:none;">
-                        <i class="flaticon-earth"></i>
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <div class="category-box-layout1">
+                        <h3 class="item-title"><a style="color:white">${{starting_amount}}</a></h3>
+                        <div class="home-number" style="color:white;">Your investment got you {{total_shares|floatformat:2}} shares at ${{start_opening_price|floatformat:2}} per share of {{ stock }} on {{start_date}}</div>
                     </div>
-                    <h3 class="item-title"><a style="color:white">Future Oriented</a></h3>
-                    <div class="home-number" style="color:white;">We do all about future. We care for you. </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="category-box-layout1">
-                    <div class="item-icon" style="box-shadow:none;">
-                        <i class="flaticon-earth"></i>
+                <div class="col-lg-6 col-md-6">
+                    <div class="category-box-layout1">
+                        <h3 class="item-title"><a style="color:white">${{ending_amount|floatformat:2}}</a></h3>
+                        <div class="home-number" style="color:white;">Selling your shares on {{end_date}} at ${{end_opening_price|floatformat:2}} per share gives you a ${{difference_in_amount|floatformat:2}} {{state}} amount at {{difference_in_percentage|floatformat:2}}% {{state}} rate</div>
                     </div>
-                    <h3 class="item-title"><a style="color:white">Future Oriented</a></h3>
-                    <div class="home-number" style="color:white;">We do all about future. We care for you. </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="category-box-layout1">
-                    <div class="item-icon" style="box-shadow:none;">
-                        <i class="flaticon-earth"></i>
+                <div class="col-lg-6 col-md-6">
+                    <div class="category-box-layout1">
+                        <h3 class="item-title"><a style="color:white">{{yearly_return|floatformat:2}}%</a></h3>
+                        <div class="home-number" style="color:white;">Year-over-year change</div>
                     </div>
-                    <h3 class="item-title"><a style="color:white">Future Oriented</a></h3>
-                    <div class="home-number" style="color:white;">We do all about future. We care for you. </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="category-box-layout1">
+                        <h3 class="item-title"><a style="color:white">{{monthly_return|floatformat:2}}%</a></h3>
+                        <div class="home-number" style="color:white;">Month-over-month change</div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12">
+                    <canvas id="myChart"></canvas>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+    {% endif %}
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    var period_values = {{ period_values|safe }};
+    var labels = period_values.map(function(item) {
+        return item[0];
+    });
+    var data = period_values.map(function(item) {
+        return item[1];
+    });
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Return on investment',
+                data: data,
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         let previousStartDate = document.querySelector('#id_start_date').value;
@@ -110,24 +139,34 @@
 
         function checkDate() {
             const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
             const selectedStartDate = new Date(startDate.value);
             const selectedEndDate = new Date(endDate.value);
 
+            if (selectedStartDate > tomorrow) {
+                alert("Start date cannot be in the future.");
+                startDate.value = '';
+                return false;
+            }
+
             if (selectedStartDate > selectedEndDate) {
-                alert("Start date cannot be greater than end date.");
+                alert("End date cannot be less than start date.");
                 endDate.value = '';
                 return false;
             }
 
             previousStartDate = startDate.value;
 
-            if (selectedStartDate > today || selectedEndDate > today) {
+            if (selectedStartDate > tomorrow || selectedEndDate > tomorrow) {
                 rate.readOnly = false;
                 rate.required = true;
                 rate.classList.remove('low-opacity');
             } else {
                 rate.readOnly = true;
                 rate.required = false;
+                rate.value=''
                 rate.classList.add('low-opacity');
             }
         }
@@ -139,9 +178,7 @@
 </script>
 
 <style>
-    .category-box-layout1:hover {
-        cursor: pointer;
-    }
+  
     .category-box-layout1 {
         background: #10221B;
     }
@@ -177,8 +214,10 @@
     }
 
     input.low-opacity {
-        opacity: 0.5 !important;
+        opacity: 0.4 !important;
     }
 </style>
+
+
 
 {% endblock main %}

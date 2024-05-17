@@ -1,13 +1,13 @@
 import time
 from datetime import datetime, timedelta
 
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from twelvedata import TDClient
 
 from .models import Stock, StockPrice
 
-API_KEY = "ecdb33a477a04200924abc5782580f36"
-td = TDClient(apikey=API_KEY)
+td = TDClient(apikey=settings.TWELVE_API_KEY)
 
 
 def save_stock_prices(symbol):

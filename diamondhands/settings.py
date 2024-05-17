@@ -1,8 +1,11 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = "django-insecure-tqy1xt74vldwj+n^s6v7*zd@yxcnr424o8l-p$s5g8&kv6b$um"
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+SECRET_KEY = os.getenv("SECRET_KEY")
 ROOT_URLCONF = "diamondhands.urls"
 WSGI_APPLICATION = "diamondhands.wsgi.application"
 TEMPLATES = [
@@ -89,3 +92,5 @@ DATABASES = {
 
 STATIC_URL = "static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+TWELVE_API_KEY = os.getenv("TWELVE_API_KEY")
