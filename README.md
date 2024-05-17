@@ -25,8 +25,8 @@ brew install python@3.11
  
 ```
 
-After installing Python 3.11 on you system
-Open your terminal and follow the below steps.
+After installing Python 3.11
+Open terminal and follow the below steps
 
 ## Step 2: Clone the GitHub Repository
 
@@ -34,15 +34,15 @@ Open your terminal and follow the below steps.
 git clone https://github.com/hersh29/diamond-hands.git
 ```
 
-It will clone the project to your computer in `diamond-hands` folder.
+Clone the project to your computer in `diamond-hands` folder.
 
-## Step 3: Navigate to the Project Directory
+## Step 3: Navigate to the project directory
 
 ```
 cd diamond-hands
 ```
 
-It will change the working directory to the application directory.
+change the working directory to the application directory.
 
 ## Step 4: Create a Virtual Environment(Optional)
 
@@ -50,16 +50,16 @@ It will change the working directory to the application directory.
 python3 -m venv myenv
 ```
 
-It will create a python virtual environment.
-After this operation, you will see the new folder called `myenv`
+create a python virtual environment.
+you will see the new folder called `myenv`
 
-If you are on Mac/linux, run this command to activate the virtual environment.
+for Mac/linux, run this command to activate the virtual environment.
 
 ```
 source myenv/bin/activate
 ```
 
-Or if you are on Windows, run this command to activate the virtual environment.
+for Windows, run this command to activate the virtual environment
 
 ```
 myenv\Scripts\activate
@@ -71,7 +71,7 @@ myenv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-It will install all the project libraries.
+install all the project libraries.
 
 ## Step 7: Run the Django Server
 
@@ -79,5 +79,5 @@ It will install all the project libraries.
 python manage.py runserver
 ```
 
-You should see output indicating that the server is running, along with the address at which you can access it (http://127.0.0.1:8000/).
+You should see output indicating that the server is running, along with the address (http://127.0.0.1:8000/)
 
