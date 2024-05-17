@@ -35,34 +35,30 @@ style="background: #0A1611; padding-bottom:50px !important; padding-top:110px !i
                                                     <ul class="form-items">
                                                         <li>
                                                             <div class="input-group stylish-input-group">
-                                                                {{form.stock}}
+                                                                {{b_form.b_stock}}
                                                             </div>
                                                         </li>
                                                         <li>
                                                             <div class="input-group stylish-input-group">
-                                                                {{form.amount}}
+                                                                {{b_form.b_amount}}
                                                             </div>
                                                         </li>
-                                                        <li>
-                                                            <div class="input-group stylish-input-group">
-                                                                {{form.rate}}
-                                                            </div>
-                                                        </li>
+                                                       
                                                     </ul>
                                                     <ul class="form-items">
                                                         <li>
                                                             <div class="input-group stylish-input-group">
-                                                                {{form.start_date}}
+                                                                {{b_form.b_start_date}}
                                                             </div>
                                                         </li>
                                                         <li>
                                                             <div class="input-group stylish-input-group">
-                                                                {{form.end_date}}
+                                                                {{b_form.b_end_date}}
                                                             </div>
                                                         </li>
                                                         <li>
                                                             <div class="form-group mb-0">
-                                                                <button type="submit" class="item-btn calc">Calculate</button>
+                                                                <button type="submit" class="item-btn calc" name="b_test">Calculate</button>
                                                             </div>
                                                         </li>
                                                     </ul>
@@ -70,7 +66,7 @@ style="background: #0A1611; padding-bottom:50px !important; padding-top:110px !i
                                             </div>
                                         </div>
                                     </section>
-                                    {% if success %}
+                                    {% if b_success %}
                                     <section class="category-wrap-layout1 padding-top-9p6 padding-bottom-7 overlay-dark-70 parallaxie bg--dark" style="background:rgb(11, 23, 19) !important;">
                                         <div class="container">
                                             <div class="section-heading heading-light heading-center">
@@ -80,30 +76,30 @@ style="background: #0A1611; padding-bottom:50px !important; padding-top:110px !i
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-6">
                                                     <div class="category-box-layout1">
-                                                        <h3 class="item-title"><a style="color:white">${{starting_amount}}</a></h3>
-                                                        <div class="home-number" style="color:white;">Your investment got you {{total_shares|floatformat:2}} shares at ${{start_opening_price|floatformat:2}} per share of {{ stock }} on {{start_date}}</div>
+                                                        <h3 class="item-title"><a style="color:white">${{b_starting_amount}}</a></h3>
+                                                        <div class="home-number" style="color:white;">Your investment got you {{b_total_shares|floatformat:2}} shares at ${{b_start_opening_price|floatformat:2}} per share of {{ b_stock }} on {{b_start_date}}</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6">
                                                     <div class="category-box-layout1">
-                                                        <h3 class="item-title"><a style="color:white">${{ending_amount|floatformat:2}}</a></h3>
-                                                        <div class="home-number" style="color:white;">Selling your shares on {{end_date}} at ${{end_opening_price|floatformat:2}} per share gives you a ${{difference_in_amount|floatformat:2}} {{state}} amount at {{difference_in_percentage|floatformat:2}}% {{state}} rate</div>
+                                                        <h3 class="item-title"><a style="color:white">${{b_ending_amount|floatformat:2}}</a></h3>
+                                                        <div class="home-number" style="color:white;">Selling your shares on {{b_end_date}} at ${{b_end_opening_price|floatformat:2}} per share gives you a ${{b_difference_in_amount|floatformat:2}} {{b_state}} amount at {{b_difference_in_percentage|floatformat:2}}% {{b_state}} rate</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6">
                                                     <div class="category-box-layout1">
-                                                        <h3 class="item-title"><a style="color:white">{{yearly_return|floatformat:2}}%</a></h3>
+                                                        <h3 class="item-title"><a style="color:white">{{b_yearly_return|floatformat:2}}%</a></h3>
                                                         <div class="home-number" style="color:white;">Year-over-year change</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6">
                                                     <div class="category-box-layout1">
-                                                        <h3 class="item-title"><a style="color:white">{{monthly_return|floatformat:2}}%</a></h3>
+                                                        <h3 class="item-title"><a style="color:white">{{b_monthly_return|floatformat:2}}%</a></h3>
                                                         <div class="home-number" style="color:white;">Month-over-month change</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-12 col-md-12">
-                                                    <canvas id="myChart"></canvas>
+                                                    <canvas id="b_chart"></canvas>
                                                 </div>
                                             </div>
                                         </div>
@@ -123,34 +119,34 @@ style="background: #0A1611; padding-bottom:50px !important; padding-top:110px !i
                                                     <ul class="form-items">
                                                         <li>
                                                             <div class="input-group stylish-input-group">
-                                                                {{form.stock}}
+                                                                {{f_form.f_stock}}
                                                             </div>
                                                         </li>
                                                         <li>
                                                             <div class="input-group stylish-input-group">
-                                                                {{form.amount}}
+                                                                {{f_form.f_amount}}
                                                             </div>
                                                         </li>
                                                         <li>
                                                             <div class="input-group stylish-input-group">
-                                                                {{form.rate}}
+                                                                {{f_form.f_rate}}
                                                             </div>
                                                         </li>
                                                     </ul>
                                                     <ul class="form-items">
                                                         <li>
                                                             <div class="input-group stylish-input-group">
-                                                                {{form.start_date}}
+                                                                {{f_form.f_start_date}}
                                                             </div>
                                                         </li>
                                                         <li>
                                                             <div class="input-group stylish-input-group">
-                                                                {{form.end_date}}
+                                                                {{f_form.f_end_date}}
                                                             </div>
                                                         </li>
                                                         <li>
                                                             <div class="form-group mb-0">
-                                                                <button type="submit" class="item-btn calc">Calculate</button>
+                                                                <button type="submit" class="item-btn calc" name="f_test">Calculate</button>
                                                             </div>
                                                         </li>
                                                     </ul>
@@ -158,7 +154,7 @@ style="background: #0A1611; padding-bottom:50px !important; padding-top:110px !i
                                             </div>
                                         </div>
                                     </section>
-                                    {% if success %}
+                                    {% if f_success %}
                                     <section class="category-wrap-layout1 padding-top-9p6 padding-bottom-7 overlay-dark-70 parallaxie bg--dark" style="background:rgb(11, 23, 19) !important;">
                                         <div class="container">
                                             <div class="section-heading heading-light heading-center">
@@ -168,30 +164,30 @@ style="background: #0A1611; padding-bottom:50px !important; padding-top:110px !i
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-6">
                                                     <div class="category-box-layout1">
-                                                        <h3 class="item-title"><a style="color:white">${{starting_amount}}</a></h3>
-                                                        <div class="home-number" style="color:white;">Your investment got you {{total_shares|floatformat:2}} shares at ${{start_opening_price|floatformat:2}} per share of {{ stock }} on {{start_date}}</div>
+                                                        <h3 class="item-title"><a style="color:white">${{f_starting_amount}}</a></h3>
+                                                        <div class="home-number" style="color:white;">Your investment got you {{f_total_shares|floatformat:2}} shares at ${{f_start_opening_price|floatformat:2}} per share of {{ f_stock }} on {{f_start_date}}</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6">
                                                     <div class="category-box-layout1">
-                                                        <h3 class="item-title"><a style="color:white">${{ending_amount|floatformat:2}}</a></h3>
-                                                        <div class="home-number" style="color:white;">Selling your shares on {{end_date}} at ${{end_opening_price|floatformat:2}} per share gives you a ${{difference_in_amount|floatformat:2}} {{state}} amount at {{difference_in_percentage|floatformat:2}}% {{state}} rate</div>
+                                                        <h3 class="item-title"><a style="color:white">${{f_ending_amount|floatformat:2}}</a></h3>
+                                                        <div class="home-number" style="color:white;">Selling your shares on {{f_end_date}} at ${{f_end_opening_price|floatformat:2}} per share gives you a ${{f_difference_in_amount|floatformat:2}} {{f_state}} amount at {{f_difference_in_percentage|floatformat:2}}% {{f_state}} rate</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6">
                                                     <div class="category-box-layout1">
-                                                        <h3 class="item-title"><a style="color:white">{{yearly_return|floatformat:2}}%</a></h3>
+                                                        <h3 class="item-title"><a style="color:white">{{f_yearly_return|floatformat:2}}%</a></h3>
                                                         <div class="home-number" style="color:white;">Year-over-year change</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6 col-md-6">
                                                     <div class="category-box-layout1">
-                                                        <h3 class="item-title"><a style="color:white">{{monthly_return|floatformat:2}}%</a></h3>
+                                                        <h3 class="item-title"><a style="color:white">{{f_monthly_return|floatformat:2}}%</a></h3>
                                                         <div class="home-number" style="color:white;">Month-over-month change</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-12 col-md-12">
-                                                    <canvas id="myChart"></canvas>
+                                                    <canvas id="f_chart"></canvas>
                                                 </div>
                                             </div>
                                         </div>
@@ -212,23 +208,25 @@ style="background: #0A1611; padding-bottom:50px !important; padding-top:110px !i
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+
+{% if b_success %}
 <script>
-    var period_values = {{ period_values|safe }};
-    var labels = period_values.map(function(item) {
+    var b_period_values = {{ b_period_values|safe }};
+    var b_labels = b_period_values.map(function(item) {
         return item[0];
     });
-    var data = period_values.map(function(item) {
+    var b_data = b_period_values.map(function(item) {
         return item[1];
     });
 
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
+    var b_ctx = document.getElementById('b_chart').getContext('2d');
+    var b_chart = new Chart(b_ctx, {
         type: 'line',
         data: {
-            labels: labels,
+            labels: b_labels,
             datasets: [{
                 label: 'Return on investment',
-                data: data,
+                data: b_data,
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
                 tension: 0.1
@@ -244,6 +242,43 @@ style="background: #0A1611; padding-bottom:50px !important; padding-top:110px !i
         }
     });
 </script>
+{% endif %}
+
+{% if f_success %}
+<script>
+    var f_period_values = {{ f_period_values|safe }};
+    var f_labels = f_period_values.map(function(item) {
+        return item[0];
+    });
+    var f_data = f_period_values.map(function(item) {
+        return item[1];
+    });
+
+    var f_ctx = document.getElementById('f_chart').getContext('2d');
+    var f_chart = new Chart(f_ctx, {
+        type: 'line',
+        data: {
+            labels: f_labels,
+            datasets: [{
+                label: 'Return on investment',
+                data: f_data,
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endif %}
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -294,6 +329,10 @@ style="background: #0A1611; padding-bottom:50px !important; padding-top:110px !i
 </script>
 
 <style>
+    #f_chart {
+        width: 100% !important;
+        height: 500px !important;
+    }
   
     .category-box-layout1 {
         background: #10221B;

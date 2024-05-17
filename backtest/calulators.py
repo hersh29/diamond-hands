@@ -38,7 +38,6 @@ class Calculator:
 
     def day_opening_price(self, on_date: date) -> float:
         """Get opening price of specific day"""
-        print("Called Opening Price")
         fail_count = 0
         while True:
             if on_date <= datetime(2014, 1, 1).date():
