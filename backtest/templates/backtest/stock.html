@@ -281,6 +281,52 @@ style="background: #0A1611; padding-bottom:50px !important; padding-top:110px !i
 
 
 <script>
+    window.onload = function() {
+        var today = new Date().toISOString().split('T')[0];
+
+        // For id_b_start_date and id_b_end_date
+        document.getElementById('id_b_start_date').setAttribute('max', today);
+        document.getElementById('id_b_end_date').setAttribute('max', today);
+
+        document.getElementById('id_b_start_date').onchange = function() {
+            if (this.value > today) {
+                alert('Selected date is greater than today. Please select a valid date.');
+                this.value = today;
+            }
+            document.getElementById('id_b_end_date').setAttribute('min', this.value);
+        };
+
+        document.getElementById('id_b_end_date').onchange = function() {
+            if (this.value > today) {
+                alert('Selected date is greater than today. Please select a valid date.');
+                this.value = today;
+            }
+        };
+
+        // For id_f_start_date and id_f_end_date
+        document.getElementById('id_f_start_date').setAttribute('min', today);
+        document.getElementById('id_f_end_date').setAttribute('min', today);
+
+        document.getElementById('id_f_start_date').onchange = function() {
+            if (this.value < today) {
+                alert('Selected date is less than today. Please select a valid date.');
+                this.value = today;
+            }
+            document.getElementById('id_f_end_date').setAttribute('min', this.value);
+        };
+
+        document.getElementById('id_f_end_date').onchange = function() {
+            if (this.value < today) {
+                alert('Selected date is less than today. Please select a valid date.');
+                this.value = today;
+            }
+        };
+    };
+</script>
+
+
+{% comment %} 
+<script>
     document.addEventListener('DOMContentLoaded', function() {
         let previousStartDate = document.querySelector('#id_start_date').value;
         const startDate = document.querySelector('#id_start_date');
@@ -326,7 +372,7 @@ style="background: #0A1611; padding-bottom:50px !important; padding-top:110px !i
         endDate.addEventListener('change', checkDate);
         checkDate();
     });
-</script>
+</script> {% endcomment %}
 
 <style>
     #f_chart {
