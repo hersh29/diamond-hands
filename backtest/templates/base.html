@@ -112,9 +112,15 @@
                                             <i class="flaticon-profile"></i>Login
                                         </button> {% endcomment %}
                                     </li>
-                                     <li>
-                                        <a  href="{% url 'home' %}" class="ghost-btn"  ><i class="flaticon-profile"></i>Log in</a>
+                                    {% if user.is_authenticated %}
+                                    <li>
+                                        <a href="#" class="ghost-btn"><i class="flaticon-profile"></i>{{ user.username }}</a>
                                     </li>
+                                {% else %}
+                                    <li>
+                                        <a href="{% url 'account_login' %}" class="ghost-btn"><i class="flaticon-profile"></i>Log in</a>
+                                    </li>
+                                {% endif %}
                                 </ul>
                             </div>
                         </div>

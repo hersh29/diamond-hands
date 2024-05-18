@@ -1,3 +1,4 @@
+from allauth.account.forms import SignupForm
 from django import forms
 
 from .models import Stock
@@ -102,3 +103,44 @@ class FutureTestForm(forms.Form):
             }
         )
     )
+
+
+class CustomSignupForm(SignupForm):
+    first_name = forms.CharField(
+        max_length=30,
+        label="First Name",
+        widget=forms.TextInput(attrs={"placeholder": "First Name"}),
+    )
+    last_name = forms.CharField(
+        max_length=30,
+        label="Last Name",
+        widget=forms.TextInput(attrs={"placeholder": "Last Name"}),
+    )
+    date_of_birth = forms.DateField(
+        label="Date of Birth",
+        widget=forms.DateInput(attrs={"type": "date", "placeholder": "Date of Birth"}),
+    )
+    gender = forms.ChoiceField(
+        choices=[("M", "Male"), ("F", "Female")],
+        label="Gender",
+        widget=forms.Select(
+            attrs={
+                "style": "background: #070F0C !important; color: #c0c0c0 !important; height: 40px; box-shadow:none !important;"
+            }
+        ),
+    )
+    phone_number = forms.CharField(
+        max_length=15,
+        label="Phone Number",
+        widget=forms.TextInput(attrs={"placeholder": "Phone Number"}),
+    )
+
+    def save(self, request):
+        user = super(CustomSignupForm, self).save(request)
+        user.first_name = self.cleaned_data["first_name"]
+        user.last_name = self.cleaned_data["last_name"]
+        user.date_of_birth = self.cleaned_data["date_of_birth"]
+        user.gender = self.cleaned_data["gender"]
+        user.phone_number = self.cleaned_data["phone_number"]
+        user.save()
+        return user

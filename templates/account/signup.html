@@ -19,6 +19,41 @@
                 <h3 class="inner-item-heading2" style='color:white !important;'>Sign Up to Listygo</h3>
                 <div class="row">
                     <div class="col-12">
+                        <label>First Name</label>
+                        <div class="form-group">
+                            {{ form.first_name|add_class:"form-control" }}
+                            {% if form.first_name.errors %}
+                                <div class="error" style="color: red;">{{ form.first_name.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <label>Last Name</label>
+                        <div class="form-group">
+                            {{ form.last_name|add_class:"form-control" }}
+                            {% if form.last_name.errors %}
+                                <div class="error" style="color: red;">{{ form.last_name.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <label>Date of Birth</label>
+                        <div class="form-group">
+                            {{ form.date_of_birth|add_class:"form-control" }}
+                            {% if form.date_of_birth.errors %}
+                                <div class="error" style="color: red;">{{ form.date_of_birth.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <label>Gender</label>
+                        <div class="form-group">
+                            {{ form.gender|add_class:"form-control" }}
+                            {% if form.gender.errors %}
+                                <div class="error" style="color: red;">{{ form.gender.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <label>Phone Number</label>
+                        <div class="form-group">
+                            {{ form.phone_number|add_class:"form-control" }}
+                            {% if form.phone_number.errors %}
+                                <div class="error" style="color: red;">{{ form.phone_number.errors }}</div>
+                            {% endif %}
+                        </div>
                         <label>Username</label>
                         <div class="form-group">
                             {{ form.username|add_class:"form-control" }}
@@ -33,7 +68,6 @@
                                 <div class="error" style="color: red;">{{ form.email.errors }}</div>
                             {% endif %}
                         </div>
-                        
                     </div>
                     <div class="col-12">
                         <label>Password</label>
@@ -52,7 +86,6 @@
                             {% if form.non_field_errors %}
                             <span style="color:#E9363D">{{form.non_field_errors.as_text}}</span>
                             {% endif %}
-                          
                         </div>
                     </div>
                 </div>
@@ -64,7 +97,6 @@
                     <a href="{% url 'account_login' %}" class="login">Log in</a>
                 </div>
             </div>
-
         </form>
       </div>
     </div>

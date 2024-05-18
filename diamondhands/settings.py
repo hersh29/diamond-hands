@@ -96,3 +96,9 @@ STATIC_URL = "static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 TWELVE_API_KEY = os.getenv("TWELVE_API_KEY")
+
+AUTH_USER_MODEL = "backtest.CustomUser"
+
+ACCOUNT_FORMS = {"signup": "backtest.forms.CustomSignupForm"}
+ACCOUNT_EMAIL_VERIFICATION = "none"
+LOGIN_REDIRECT_URL = "home"

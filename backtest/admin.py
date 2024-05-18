@@ -1,6 +1,7 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 
-from .models import Stock, StockPrice
+from .models import CustomUser, Stock, StockPrice
 
 
 class StockAdmin(admin.ModelAdmin):
@@ -18,3 +19,22 @@ class StockPriceAdmin(admin.ModelAdmin):
 
 
 admin.site.register(StockPrice, StockPriceAdmin)
+
+
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+    list_display = [
+        "username",
+        "email",
+        "first_name",
+        "last_name",
+        "date_of_birth",
+        "gender",
+        "phone_number",
+    ]
+    fieldsets = UserAdmin.fieldsets + (
+        (None, {"fields": ("date_of_birth", "gender", "phone_number")}),
+    )
+
+
+admin.site.register(CustomUser, CustomUserAdmin)

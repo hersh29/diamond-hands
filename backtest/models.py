@@ -1,3 +1,4 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
@@ -68,3 +69,11 @@ class StockPrice(models.Model):
 
     def __str__(self):
         return f"{self.stock.symbol} - {self.date}"
+
+
+class CustomUser(AbstractUser):
+    date_of_birth = models.DateField(null=True, blank=True)
+    gender = models.CharField(
+        max_length=1, choices=[("M", "Male"), ("F", "Female")], null=True, blank=True
+    )
+    phone_number = models.CharField(max_length=15, null=True, blank=True)
