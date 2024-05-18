@@ -1,0 +1,86 @@
+
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% load i18n %}
+ 
+
+{% block title %}
+<title>Listygo | Log in </title>
+{% endblock title %}
+
+{% block main %}
+
+<section class="padding-top-6 padding-bottom-7 bg--accent"  style="background: #070F0C;">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8">
+        <form class="listing-form" method="post" style="margin-top:100px; background: #10221B; color:white !important;">
+            {% csrf_token %}
+            <div class="inner-box">
+                <h3 class="inner-item-heading2" style='color:white !important;'>Log in to Diamond Hands</h3>
+                <div class="row">
+                    <div class="col-12">
+                        <label>Email</label>
+                        <div class="form-group">
+                            {{ form.login|add_class:"form-control" }}
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label>Password</label>
+                        <div class="form-group">
+                            {{ form.password|add_class:"form-control" }}
+                        </div>
+                        {% if form.non_field_errors %}
+                        <span style="color:#E9363D">{{form.non_field_errors.as_text}}</span>
+                        {% endif %}
+                        
+                        {% comment %} <div style="text-align: center;">
+                          <a href="{% url 'account_reset_password' %}" class="forgot-password">Forgot Password ?</a>
+                      </div> {% endcomment %}
+                    </div>
+                </div>
+            </div>
+            <div class="inner-box" style="text-align: center;">
+                <button class="btn-upload item-icon" type="submit" style="background: #3F8D8D !important; box-shadow:none !important;"  >{% trans "Log in" %}</button>
+                <div style="padding-top: 10px;">
+                    Don't have an account ? 
+                    <a href="{% url 'account_signup' %}" class="sign-up">Sign up</a>
+                </div>
+               
+            </div>
+        </form>
+      </div>
+     
+    </div>
+  </div>
+</section>
+
+<style>
+    .forgot-password:hover, .sign-up:hover {
+        color: #2F5E5E;
+      }
+    .forgot-password, .sign-up {
+        color: #3F8D8D;
+        text-align: center;
+      }
+
+      .item-icon:hover {
+        background: #2F5E5E !important;
+    }
+
+    input{
+        background: #070F0C !important;
+        color: #c0c0c0 !important;
+        box-shadow: none !important;
+    }
+    
+    input::placeholder{
+        background: #070F0C !important;
+        color: #c0c0c0 !important; 
+    }
+
+</style>
+
+{% endblock main %}
+

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+<title>Listygo | Sign up </title>
+{% endblock title %}
+
+{% block main %}
+
+<section class="padding-top-6 padding-bottom-7 bg--accent" style="background: #070F0C;">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8">
+        <form class="listing-form" method="post" style="margin-top:100px; background: #10221B; color:white !important;">
+            {% csrf_token %}
+            <div class="inner-box">
+                <h3 class="inner-item-heading2" style='color:white !important;'>Sign Up to Listygo</h3>
+                <div class="row">
+                    <div class="col-12">
+                        <label>Username</label>
+                        <div class="form-group">
+                            {{ form.username|add_class:"form-control" }}
+                            {% if form.username.errors %}
+                                <div class="error" style="color: red;">{{ form.username.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <label>Email</label>
+                        <div class="form-group">
+                            {{ form.email|add_class:"form-control" }}
+                            {% if form.email.errors %}
+                                <div class="error" style="color: red;">{{ form.email.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                    </div>
+                    <div class="col-12">
+                        <label>Password</label>
+                        <div class="form-group">
+                            {{ form.password1|add_class:"form-control" }}
+                            {% if form.password1.errors %}
+                                <div class="error" style="color: red;">{{ form.password1.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <label>Confirm Password</label>
+                        <div class="form-group">
+                            {{ form.password2|add_class:"form-control" }}
+                            {% if form.password2.errors %}
+                                <div class="error" style="color: red;">{{ form.password2.errors }}</div>
+                            {% endif %}
+                            {% if form.non_field_errors %}
+                            <span style="color:#E9363D">{{form.non_field_errors.as_text}}</span>
+                            {% endif %}
+                          
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="inner-box" style="text-align: center;">
+                <button class="btn-upload item-icon" type="submit" style="background: #3F8D8D !important; box-shadow:none !important;">{% trans "Sign Up" %}</button>
+                <div style="padding-top: 10px;">
+                    Already have an account ?
+                    <a href="{% url 'account_login' %}" class="login">Log in</a>
+                </div>
+            </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+    .forgot-password:hover, .login:hover {
+        color: #2F5E5E;
+      }
+    .forgot-password, .login {
+        color:#3F8D8D ;
+        text-align: center;
+      }
+
+    .item-icon:hover {
+        background: #2F5E5E !important;
+    }
+
+    input{
+        background: #070F0C !important;
+        color: #c0c0c0 !important;
+        box-shadow: none !important;
+    }
+    
+    input::placeholder{
+        background: #070F0C !important;
+        color: #c0c0c0 !important; 
+    }
+
+</style>
+
+{% endblock main %}

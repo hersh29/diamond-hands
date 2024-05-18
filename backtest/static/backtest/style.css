@@ -379,7 +379,7 @@ ul {
   content: "";
   bottom: 0;
   left: 0;
-  background-color: #ff4a52;
+  background-color: #3F8D8D !important;
   height: 4px;
   width: 55px;
 }
