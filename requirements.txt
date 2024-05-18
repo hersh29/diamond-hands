@@ -1,3 +1,13 @@
 asgiref
+certifi
+charset-normalizer
 Django
+django-allauth
+django-widget-tweaks
+idna
+python-dotenv
+pytimeparse
+requests
 sqlparse
+twelvedata
+urllib3
