@@ -116,6 +116,7 @@ class CustomSignupForm(SignupForm):
         label="Last Name",
         widget=forms.TextInput(attrs={"placeholder": "Last Name"}),
     )
+
     date_of_birth = forms.DateField(
         required=False,
         label="Date of Birth",

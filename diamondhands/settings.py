@@ -102,3 +102,5 @@ AUTH_USER_MODEL = "backtest.CustomUser"
 ACCOUNT_FORMS = {"signup": "backtest.forms.CustomSignupForm"}
 ACCOUNT_EMAIL_VERIFICATION = "none"
 LOGIN_REDIRECT_URL = "home"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
