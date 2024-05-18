@@ -117,10 +117,12 @@ class CustomSignupForm(SignupForm):
         widget=forms.TextInput(attrs={"placeholder": "Last Name"}),
     )
     date_of_birth = forms.DateField(
+        required=False,
         label="Date of Birth",
         widget=forms.DateInput(attrs={"type": "date", "placeholder": "Date of Birth"}),
     )
     gender = forms.ChoiceField(
+        required=False,
         choices=[("M", "Male"), ("F", "Female")],
         label="Gender",
         widget=forms.Select(
@@ -130,6 +132,7 @@ class CustomSignupForm(SignupForm):
         ),
     )
     phone_number = forms.CharField(
+        required=False,
         max_length=15,
         label="Phone Number",
         widget=forms.TextInput(attrs={"placeholder": "Phone Number"}),
@@ -137,10 +140,10 @@ class CustomSignupForm(SignupForm):
 
     def save(self, request):
         user = super(CustomSignupForm, self).save(request)
-        user.first_name = self.cleaned_data["first_name"]
-        user.last_name = self.cleaned_data["last_name"]
-        user.date_of_birth = self.cleaned_data["date_of_birth"]
-        user.gender = self.cleaned_data["gender"]
-        user.phone_number = self.cleaned_data["phone_number"]
+        user.first_name = self.cleaned_data.get("first_name")
+        user.last_name = self.cleaned_data.get("last_name")
+        user.date_of_birth = self.cleaned_data.get("date_of_birth")
+        user.gender = self.cleaned_data.get("gender")
+        user.phone_number = self.cleaned_data.get("phone_number")
         user.save()
         return user
