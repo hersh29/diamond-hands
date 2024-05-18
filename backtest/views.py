@@ -47,6 +47,10 @@ def stock(request):
                         "f_state": f_calc.state(),
                         "f_period_values": f_calc.get_periods_values(),
                         "f_form": f_form,
+                        "tab_id": "two",
+                        "link_id": "two_link",
+                        "otab_id": "one",
+                        "olink_id": "one_link",
                     }
                 )
 
@@ -79,6 +83,10 @@ def stock(request):
                         "b_state": b_calc.state(),
                         "b_period_values": b_calc.get_periods_values(),
                         "b_form": b_form,
+                        "tab_id": "one",
+                        "link_id": "one_link",
+                        "otab_id": "two",
+                        "olink_id": "two_link",
                     }
                 )
     context.update({"f_form": f_form, "b_form": b_form})

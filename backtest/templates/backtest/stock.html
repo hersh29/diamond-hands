@@ -16,10 +16,10 @@ style="background: #0A1611; padding-bottom:50px !important; padding-top:110px !i
                     <div class="listygo-text-box listing-details-menu" style="padding: 0 0 0 0 !important; background: #0A1611 !important;">
                         <ul class="nav nav-tabs" style="border:none !important; justify-content: center !important; padding:10px !important;">
                             <li class="nav-item">
-                                <a href="#one" data-toggle="tab" aria-expanded="false" class="active">Back Testing</a>
+                                <a href="#one" data-toggle="tab" aria-expanded="false" class="active" id="one_link">Back Testing</a>
                             </li>
                             <li class="nav-item">
-                                <a href="#two" data-toggle="tab" aria-expanded="false">Future Testing</a>
+                                <a href="#two" data-toggle="tab" aria-expanded="false" id="two_link">Future Testing</a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -279,15 +279,21 @@ style="background: #0A1611; padding-bottom:50px !important; padding-top:110px !i
 </script>
 {% endif %}
 
-
 <script>
-    window.onload = function() {
-        var today = new Date().toISOString().split('T')[0];
+    document.addEventListener('DOMContentLoaded', function() {
+        {% if tab_id %}
+        document.getElementById('{{ tab_id }}').classList.add('active', 'show');
+        document.getElementById('{{ link_id }}').classList.add('active');
+        document.getElementById('{{ otab_id }}').classList.remove('active', 'show');
+        document.getElementById('{{ olink_id }}').classList.remove('active');
+        {% endif %}
 
+        var today = new Date().toISOString().split('T')[0];
+    
         // For id_b_start_date and id_b_end_date
         document.getElementById('id_b_start_date').setAttribute('max', today);
         document.getElementById('id_b_end_date').setAttribute('max', today);
-
+    
         document.getElementById('id_b_start_date').onchange = function() {
             if (this.value > today) {
                 alert('Selected date is greater than today. Please select a valid date.');
@@ -295,18 +301,18 @@ style="background: #0A1611; padding-bottom:50px !important; padding-top:110px !i
             }
             document.getElementById('id_b_end_date').setAttribute('min', this.value);
         };
-
+    
         document.getElementById('id_b_end_date').onchange = function() {
             if (this.value > today) {
                 alert('Selected date is greater than today. Please select a valid date.');
                 this.value = today;
             }
         };
-
+    
         // For id_f_start_date and id_f_end_date
         document.getElementById('id_f_start_date').setAttribute('min', today);
         document.getElementById('id_f_end_date').setAttribute('min', today);
-
+    
         document.getElementById('id_f_start_date').onchange = function() {
             if (this.value < today) {
                 alert('Selected date is less than today. Please select a valid date.');
@@ -314,15 +320,15 @@ style="background: #0A1611; padding-bottom:50px !important; padding-top:110px !i
             }
             document.getElementById('id_f_end_date').setAttribute('min', this.value);
         };
-
+    
         document.getElementById('id_f_end_date').onchange = function() {
             if (this.value < today) {
                 alert('Selected date is less than today. Please select a valid date.');
                 this.value = today;
             }
         };
-    };
-</script>
+    });
+    </script>
 
 
 {% comment %} 

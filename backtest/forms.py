@@ -72,12 +72,13 @@ class FutureTestForm(forms.Form):
         )
     )
     f_rate = forms.DecimalField(
-        required=False,
+        required=True,
         widget=forms.NumberInput(
             attrs={
                 "class": "form-control",
                 "placeholder": "Enter the return rate",
                 "step": "any",
+                "required": True,
             },
         ),
     )
