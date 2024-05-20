@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import CustomUser, Stock, StockPrice
+from .models import Crypto, CryptoPrice, CustomUser, Stock, StockPrice
 
 
 class StockAdmin(admin.ModelAdmin):
@@ -19,6 +19,23 @@ class StockPriceAdmin(admin.ModelAdmin):
 
 
 admin.site.register(StockPrice, StockPriceAdmin)
+
+
+class CryptoAmin(admin.ModelAdmin):
+    list_display = ["symbol", "exchange", "crypto_name"]
+    search_fields = ["symbol", "crypto_name"]
+
+
+admin.site.register(Crypto, CryptoAmin)
+
+
+class CryptoPriceAdmin(admin.ModelAdmin):
+    list_display = ["crypto", "date", "open", "high", "low", "close"]
+    search_fields = ["crypto__symbol", "date"]
+    list_filter = ["date", "crypto"]
+
+
+admin.site.register(CryptoPrice, CryptoPriceAdmin)
 
 
 class CustomUserAdmin(UserAdmin):
