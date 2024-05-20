@@ -1,7 +1,7 @@
 from allauth.account.forms import SignupForm
 from django import forms
 
-from .models import Stock
+from .models import Crypto, Stock
 
 
 class BackTestForm(forms.Form):
@@ -107,9 +107,9 @@ class FutureTestForm(forms.Form):
 
 class BackTestCryptoForm(forms.Form):
     b_crypto = forms.ModelChoiceField(
-        queryset=Stock.objects.all(),
+        queryset=Crypto.objects.all(),
         to_field_name="symbol",
-        empty_label="Choose the stock",
+        empty_label="Choose the crypto",
         widget=forms.Select(
             attrs={
                 "class": "form-control assets_dropdown",
@@ -152,9 +152,9 @@ class BackTestCryptoForm(forms.Form):
 
 class FutureTestCryptoForm(forms.Form):
     f_crypto = forms.ModelChoiceField(
-        queryset=Stock.objects.all(),
+        queryset=Crypto.objects.all(),
         to_field_name="symbol",
-        empty_label="Choose the stock",
+        empty_label="Choose the crypto",
         widget=forms.Select(
             attrs={
                 "class": "form-control assets_dropdown",

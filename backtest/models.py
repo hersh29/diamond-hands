@@ -74,7 +74,7 @@ class StockPrice(models.Model):
 class Crypto(models.Model):
     """
     Crypto Model
-    Represents a crypto price with attributes like symbol, exchange, and company name.
+    Represents a crypto price with attributes like symbol, exchange, crypto name.
     """
 
     symbol = models.CharField(
@@ -99,7 +99,7 @@ class Crypto(models.Model):
 class CryptoPrice(models.Model):
     """
     CryptoPrice Model
-    Represents a specific price point for a crypto on a given date/time with attributes like date, open, high, low, close, and volume.
+    Represents a specific price point for a crypto on a given date/time with attributes like date, open, high, low, close.
     """
 
     crypto = models.ForeignKey(
@@ -127,9 +127,6 @@ class CryptoPrice(models.Model):
         max_digits=10,
         decimal_places=2,
         help_text="Closing price of the crypto on that date.",
-    )
-    volume = models.BigIntegerField(
-        help_text="Volume of currencies traded on that date."
     )
 
     class Meta:

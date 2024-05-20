@@ -191,13 +191,3 @@ def crypto(request):
     context.update({"f_form": f_form, "b_form": b_form})
     pprint(context)
     return render(request, "backtest/crypto.html", context=context)
-
-
-def forex(request):
-    if request.method == "POST":
-        form = StockForm(request.POST)
-        if form.is_valid():
-            print(form.cleaned_data)
-    else:
-        form = StockForm()
-    return render(request, "backtest/forex.html", {"form": form})
