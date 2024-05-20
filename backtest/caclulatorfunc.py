@@ -4,9 +4,8 @@ from decimal import Decimal
 from django.conf import settings
 from twelvedata import TDClient
 
+from .api_request import get_time_series
 from .models import CryptoPrice
-
-td = TDClient(apikey=settings.TWELVE_API_KEY)
 
 
 def total_shares(start_date: date, amount: float, symbol: str) -> float:
@@ -44,12 +43,12 @@ def day_opening_price(on_date: date, symbol: str, rate: float = None) -> float:
         if on_date <= datetime(2014, 1, 1).date():
             end_date = on_date + timedelta(days=1)
             try:
-                price = td.time_series(
-                    symbol=symbol,
-                    interval="1day",
+                price = get_time_series(
                     start_date=on_date.strftime("%Y-%m-%d"),
+                    symbol=symbol,
                     end_date=end_date.strftime("%Y-%m-%d"),
-                ).as_json()
+                )
+                print(price)
 
                 if price:
                     return Decimal(price[0]["open"])
