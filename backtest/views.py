@@ -124,7 +124,7 @@ def crypto(request):
                     "f_end_date": end_date,
                     "f_starting_amount": amount,
                     "f_ending_amount": ending_amount(
-                        start_date, end_date, amount, symbol
+                        start_date, end_date, amount, symbol, rate
                     ),
                     "f_start_opening_price": day_opening_price(
                         start_date, symbol, rate
@@ -132,20 +132,20 @@ def crypto(request):
                     "f_end_opening_price": day_opening_price(end_date, symbol, rate),
                     "f_total_shares": total_shares(start_date, amount, symbol),
                     "f_difference_in_amount": difference_in_amount(
-                        start_date, end_date, amount, symbol
+                        start_date, end_date, amount, symbol, rate
                     ),
                     "f_difference_in_percentage": difference_in_percentage(
                         start_date, end_date, amount, symbol
                     ),
                     "f_yearly_return": year_to_year_return(
-                        start_date, end_date, amount, symbol
+                        start_date, end_date, amount, symbol, rate
                     ),
                     "f_monthly_return": month_to_month_return(
-                        start_date, end_date, amount, symbol
+                        start_date, end_date, amount, symbol, rate
                     ),
-                    "f_state": state(start_date, end_date, amount, symbol),
+                    "f_state": state(start_date, end_date, amount, symbol, rate),
                     "f_period_values": get_periods_values(
-                        start_date, end_date, amount, symbol
+                        start_date, end_date, amount, symbol, rate
                     ),
                     "f_form": f_form,
                     "tab_id": "two",

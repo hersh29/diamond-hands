@@ -19,18 +19,22 @@ def opening_amount(amount: float) -> float:
     return amount
 
 
-def ending_amount(start_date: date, end_date: date, amount: float, symbol: str):
+def ending_amount(
+    start_date: date, end_date: date, amount: float, symbol: str, rate: float = None
+):
     """Get total amount of ending date"""
     return amount_on_date(
-        start_date=start_date, on_date=end_date, amount=amount, symbol=symbol
+        start_date=start_date, on_date=end_date, amount=amount, symbol=symbol, rate=rate
     )
 
 
 def amount_on_date(
-    start_date: date, on_date: date, amount: float, symbol: str
+    start_date: date, on_date: date, amount: float, symbol: str, rate: float = None
 ) -> float:
     """Get invested amount value on specific date"""
-    return total_shares(start_date, amount, symbol) * day_opening_price(on_date, symbol)
+    return total_shares(start_date, amount, symbol) * day_opening_price(
+        on_date, symbol, rate
+    )
 
 
 def day_opening_price(on_date: date, symbol: str, rate: float = None) -> float:
@@ -56,7 +60,7 @@ def day_opening_price(on_date: date, symbol: str, rate: float = None) -> float:
                     break
                 on_date -= timedelta(days=1)
 
-        elif on_date > date.today() and rate is not None:
+        elif rate is not None:
             current_price = day_opening_price(date.today() - timedelta(days=1), symbol)
             years = Decimal((on_date - date.today()).days / 365)
             percent_rate = rate / 100
@@ -85,16 +89,20 @@ def end_date_opening_price(end_date: date, symbol: str) -> float:
 
 
 def difference_in_amount(
-    start_date: date, end_date: date, amount: float, symbol: str
+    start_date: date, end_date: date, amount: float, symbol: str, rate: float = None
 ) -> float:
     """Get amount difference between start and end date"""
-    return ending_amount(start_date, end_date, amount, symbol) - opening_amount(amount)
+    return ending_amount(start_date, end_date, amount, symbol, rate) - opening_amount(
+        amount
+    )
 
 
-def state(start_date: date, end_date: date, amount: float, symbol: str) -> str:
+def state(
+    start_date: date, end_date: date, amount: float, symbol: str, rate: float = None
+) -> str:
     return (
         "profit"
-        if difference_in_amount(start_date, end_date, amount, symbol) > 0
+        if difference_in_amount(start_date, end_date, amount, symbol, rate) > 0
         else "loss"
     )
 
@@ -110,14 +118,14 @@ def difference_in_percentage(
 
 
 def year_to_year_return(
-    start_date: date, end_date: date, amount: float, symbol: str
+    start_date: date, end_date: date, amount: float, symbol: str, rate: float = None
 ) -> float:
     """Calculate year-over-year return"""
     years = Decimal((end_date - start_date).days / 365)
     return (
         (
             (
-                ending_amount(start_date, end_date, amount, symbol)
+                ending_amount(start_date, end_date, amount, symbol, rate)
                 / opening_amount(amount)
             )
             ** (Decimal(1) / years)
@@ -127,14 +135,14 @@ def year_to_year_return(
 
 
 def month_to_month_return(
-    start_date: date, end_date: date, amount: float, symbol: str
+    start_date: date, end_date: date, amount: float, symbol: str, rate: float = None
 ) -> float:
     """Calculate month-over-month return"""
     months = Decimal((end_date - start_date).days / 30)
     return (
         (
             (
-                ending_amount(start_date, end_date, amount, symbol)
+                ending_amount(start_date, end_date, amount, symbol, rate)
                 / opening_amount(amount)
             )
             ** (Decimal(1) / months)
@@ -163,14 +171,14 @@ def get_periods_date(start_date: date, end_date: date) -> list:
 
 
 def get_periods_values(
-    start_date: date, end_date: date, amount: float, symbol: str
+    start_date: date, end_date: date, amount: float, symbol: str, rate: float = None
 ) -> list:
     """Get investment amount for each period between start and end date"""
     periods = get_periods_date(start_date, end_date)
     periods_price = []
     for period in periods:
         periods_price.append(
-            [period, amount_on_date(start_date, period, amount, symbol)]
+            [period, amount_on_date(start_date, period, amount, symbol, rate)]
         )
     return [
         [date.strftime("%Y-%m"), round(float(value), 2)]
