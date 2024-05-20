@@ -61,7 +61,7 @@ def save_stock_prices(symbol):
 
 def save_crypto_prices(symbol):
     INTERVAL = "1day"
-    START_DATE = datetime.strptime("2014-01-01", "%Y-%m-%d")
+    START_DATE = datetime.strptime("2014-09-17", "%Y-%m-%d")
     END_DATE = datetime.now()
 
     try:
@@ -105,3 +105,6 @@ def save_crypto_prices(symbol):
         request_count += 1
         if request_count % 7 == 0:
             time.sleep(60)
+
+
+# BTC: 2014-09-17(Start Date)

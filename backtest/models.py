@@ -134,7 +134,7 @@ class CryptoPrice(models.Model):
         verbose_name_plural = "Crypto Prices"
 
     def __str__(self):
-        return f"{self.stock.symbol} - {self.date}"
+        return f"{self.crypto.symbol} - {self.date}"
 
 
 class CustomUser(AbstractUser):

@@ -4,7 +4,7 @@ from decimal import Decimal
 from django.conf import settings
 from twelvedata import TDClient
 
-from .models import StockPrice
+from .models import CryptoPrice
 
 td = TDClient(apikey=settings.TWELVE_API_KEY)
 
@@ -19,14 +19,18 @@ def opening_amount(amount: float) -> float:
     return amount
 
 
-def ending_amount(end_date: date, amount: float, symbol: str):
+def ending_amount(start_date: date, end_date: date, amount: float, symbol: str):
     """Get total amount of ending date"""
-    return amount_on_date(end_date, amount, symbol)
+    return amount_on_date(
+        start_date=start_date, on_date=end_date, amount=amount, symbol=symbol
+    )
 
 
-def amount_on_date(on_date: date, amount: float, symbol: str) -> float:
+def amount_on_date(
+    start_date: date, on_date: date, amount: float, symbol: str
+) -> float:
     """Get invested amount value on specific date"""
-    return total_shares(on_date, amount, symbol) * day_opening_price(on_date, symbol)
+    return total_shares(start_date, amount, symbol) * day_opening_price(on_date, symbol)
 
 
 def day_opening_price(on_date: date, symbol: str, rate: float = None) -> float:
@@ -53,9 +57,7 @@ def day_opening_price(on_date: date, symbol: str, rate: float = None) -> float:
                 on_date -= timedelta(days=1)
 
         elif on_date > date.today() and rate is not None:
-            current_price = day_opening_price(
-                date.today() - timedelta(days=1), symbol, rate
-            )
+            current_price = day_opening_price(date.today() - timedelta(days=1), symbol)
             years = Decimal((on_date - date.today()).days / 365)
             percent_rate = rate / 100
             future_price = current_price * (1 + percent_rate) ** years
@@ -63,8 +65,8 @@ def day_opening_price(on_date: date, symbol: str, rate: float = None) -> float:
             return future_price
 
         else:
-            price = StockPrice.objects.filter(
-                date=on_date, stock__symbol=symbol
+            price = CryptoPrice.objects.filter(
+                date=on_date, crypto__symbol=symbol
             ).first()
             if price is not None:
                 return price.open
@@ -72,11 +74,21 @@ def day_opening_price(on_date: date, symbol: str, rate: float = None) -> float:
                 on_date -= timedelta(days=1)
 
 
+def start_date_opening_price(start_date: date, symbol: str) -> float:
+    """Get opening price on start date"""
+    return day_opening_price(start_date, symbol)
+
+
+def end_date_opening_price(end_date: date, symbol: str) -> float:
+    """Get opening price on end date"""
+    return day_opening_price(end_date, symbol)
+
+
 def difference_in_amount(
     start_date: date, end_date: date, amount: float, symbol: str
 ) -> float:
     """Get amount difference between start and end date"""
-    return ending_amount(end_date, amount, symbol) - opening_amount(amount)
+    return ending_amount(start_date, end_date, amount, symbol) - opening_amount(amount)
 
 
 def state(start_date: date, end_date: date, amount: float, symbol: str) -> str:
@@ -104,7 +116,10 @@ def year_to_year_return(
     years = Decimal((end_date - start_date).days / 365)
     return (
         (
-            (ending_amount(end_date, amount, symbol) / opening_amount(amount))
+            (
+                ending_amount(start_date, end_date, amount, symbol)
+                / opening_amount(amount)
+            )
             ** (Decimal(1) / years)
         )
         - 1
@@ -118,7 +133,10 @@ def month_to_month_return(
     months = Decimal((end_date - start_date).days / 30)
     return (
         (
-            (ending_amount(end_date, amount, symbol) / opening_amount(amount))
+            (
+                ending_amount(start_date, end_date, amount, symbol)
+                / opening_amount(amount)
+            )
             ** (Decimal(1) / months)
         )
         - 1
@@ -151,7 +169,9 @@ def get_periods_values(
     periods = get_periods_date(start_date, end_date)
     periods_price = []
     for period in periods:
-        periods_price.append([period, amount_on_date(period, amount, symbol)])
+        periods_price.append(
+            [period, amount_on_date(start_date, period, amount, symbol)]
+        )
     return [
         [date.strftime("%Y-%m"), round(float(value), 2)]
         for date, value in periods_price

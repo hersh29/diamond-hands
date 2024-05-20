@@ -123,7 +123,9 @@ def crypto(request):
                     "f_start_date": start_date,
                     "f_end_date": end_date,
                     "f_starting_amount": amount,
-                    "f_ending_amount": ending_amount(end_date, amount, symbol),
+                    "f_ending_amount": ending_amount(
+                        start_date, end_date, amount, symbol
+                    ),
                     "f_start_opening_price": day_opening_price(
                         start_date, symbol, rate
                     ),
@@ -155,7 +157,9 @@ def crypto(request):
 
         if "b_test" in request.POST:
             b_form = BackTestCryptoForm(request.POST)
+
             if b_form.is_valid():
+                print(b_form.cleaned_data)
                 b_crypto = Crypto.objects.get(symbol=b_form.cleaned_data["b_crypto"])
                 start_date = b_form.cleaned_data["b_start_date"]
                 end_date = b_form.cleaned_data["b_end_date"]
@@ -169,7 +173,9 @@ def crypto(request):
                         "b_start_date": start_date,
                         "b_end_date": end_date,
                         "b_starting_amount": amount,
-                        "b_ending_amount": ending_amount(end_date, amount, symbol),
+                        "b_ending_amount": ending_amount(
+                            start_date, end_date, amount, symbol
+                        ),
                         "b_start_opening_price": day_opening_price(start_date, symbol),
                         "b_end_opening_price": day_opening_price(end_date, symbol),
                         "b_total_shares": total_shares(start_date, amount, symbol),
