@@ -165,43 +165,49 @@ def crypto(request):
                 end_date = b_form.cleaned_data["b_end_date"]
                 amount = b_form.cleaned_data["b_amount"]
                 symbol = b_form.cleaned_data["b_crypto"]
-
-                context.update(
-                    {
-                        "b_success": True,
-                        "b_crypto": b_crypto.crypto_name,
-                        "b_start_date": start_date,
-                        "b_end_date": end_date,
-                        "b_starting_amount": amount,
-                        "b_ending_amount": ending_amount(
-                            start_date, end_date, amount, symbol
-                        ),
-                        "b_start_opening_price": day_opening_price(start_date, symbol),
-                        "b_end_opening_price": day_opening_price(end_date, symbol),
-                        "b_total_shares": total_shares(start_date, amount, symbol),
-                        "b_difference_in_amount": difference_in_amount(
-                            start_date, end_date, amount, symbol
-                        ),
-                        "b_difference_in_percentage": difference_in_percentage(
-                            start_date, end_date, amount, symbol
-                        ),
-                        "b_yearly_return": year_to_year_return(
-                            start_date, end_date, amount, symbol
-                        ),
-                        "b_monthly_return": month_to_month_return(
-                            start_date, end_date, amount, symbol
-                        ),
-                        "b_state": state(start_date, end_date, amount, symbol),
-                        "b_period_values": get_periods_values(
-                            start_date, end_date, amount, symbol
-                        ),
-                        "b_form": b_form,
-                        "tab_id": "one",
-                        "link_id": "one_link",
-                        "otab_id": "two",
-                        "olink_id": "two_link",
-                    }
-                )
+                if b_crypto.start_date > start_date:
+                    context.update(
+                        {"date_error": True, "ini_date": b_crypto.start_date}
+                    )
+                else:
+                    context.update(
+                        {
+                            "b_success": True,
+                            "b_crypto": b_crypto.crypto_name,
+                            "b_start_date": start_date,
+                            "b_end_date": end_date,
+                            "b_starting_amount": amount,
+                            "b_ending_amount": ending_amount(
+                                start_date, end_date, amount, symbol
+                            ),
+                            "b_start_opening_price": day_opening_price(
+                                start_date, symbol
+                            ),
+                            "b_end_opening_price": day_opening_price(end_date, symbol),
+                            "b_total_shares": total_shares(start_date, amount, symbol),
+                            "b_difference_in_amount": difference_in_amount(
+                                start_date, end_date, amount, symbol
+                            ),
+                            "b_difference_in_percentage": difference_in_percentage(
+                                start_date, end_date, amount, symbol
+                            ),
+                            "b_yearly_return": year_to_year_return(
+                                start_date, end_date, amount, symbol
+                            ),
+                            "b_monthly_return": month_to_month_return(
+                                start_date, end_date, amount, symbol
+                            ),
+                            "b_state": state(start_date, end_date, amount, symbol),
+                            "b_period_values": get_periods_values(
+                                start_date, end_date, amount, symbol
+                            ),
+                            "b_form": b_form,
+                            "tab_id": "one",
+                            "link_id": "one_link",
+                            "otab_id": "two",
+                            "olink_id": "two_link",
+                        }
+                    )
     context.update({"f_form": f_form, "b_form": b_form})
     pprint(context)
     return render(request, "backtest/crypto.html", context=context)
