@@ -61,7 +61,7 @@ def save_stock_prices(symbol):
 
 def save_crypto_prices(symbol):
     INTERVAL = "1day"
-    START_DATE = datetime.strptime("2014-09-17", "%Y-%m-%d")
+    START_DATE = datetime.strptime("2021-5-15", "%Y-%m-%d")
     END_DATE = datetime.now()
 
     try:
@@ -107,4 +107,13 @@ def save_crypto_prices(symbol):
             time.sleep(60)
 
 
-# BTC: 2014-09-17(Start Date)
+# BTC/USD: 2014-09-17(Start Date)
+# ETH/USD: 2021-09-16(Start Date)
+# BNB/USD: 2017-11-8(Start Date)
+# SOL/USD: 2021-8-31(Start Date)
+# XRP/USD: 2018-1-17(Start Date)
+# DOGE/USD: 2021-9-13(Start Date)
+# DOT/USD: 2023-5-4(Start Date)
+# ----------------
+# SHIB/USD: 2021-5-15(Start Date)
+# -----------

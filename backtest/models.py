@@ -20,6 +20,7 @@ class Stock(models.Model):
         blank=True,
         help_text="Name of the company (e.g., Apple Inc.)",
     )
+    start_date = models.DateField(help_text="start of the stock")
 
     class Meta:
         verbose_name = "Stock"
@@ -87,6 +88,7 @@ class Crypto(models.Model):
         blank=True,
         help_text="Name of the Crypto (e.g., Bitcoin.)",
     )
+    start_date = models.DateField(help_text="start of the crypto")
 
     class Meta:
         verbose_name = "Crypto"
