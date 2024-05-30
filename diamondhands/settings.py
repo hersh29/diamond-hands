@@ -95,7 +95,8 @@ DATABASES = {
 STATIC_URL = "static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-TWELVE_API_KEY = os.getenv("TWELVE_API_KEY")
+# TWELVE_API_KEY = os.getenv("TWELVE_API_KEY")
+TWELVE_API_KEY = "ecdb33a477a04200924abc5782580f36"
 
 AUTH_USER_MODEL = "backtest.CustomUser"
 

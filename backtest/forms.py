@@ -1,7 +1,7 @@
 from allauth.account.forms import SignupForm
 from django import forms
 
-from .models import Crypto, Stock
+from .models import Crypto, Forex, Stock
 
 
 class BackTestForm(forms.Form):
@@ -249,3 +249,104 @@ class CustomSignupForm(SignupForm):
         user.phone_number = self.cleaned_data.get("phone_number")
         user.save()
         return user
+
+
+class BackTestForexForm(forms.Form):
+    b_forex = forms.ModelChoiceField(
+        queryset=Forex.objects.all(),
+        to_field_name="symbol",
+        empty_label="Choose the currency",
+        widget=forms.Select(
+            attrs={
+                "class": "form-control assets_dropdown",
+                "id": "form-assets",
+                "required": True,
+            }
+        ),
+    )
+    b_amount = forms.DecimalField(
+        widget=forms.NumberInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Enter the amount",
+                "step": "any",
+                "required": True,
+            }
+        )
+    )
+    b_start_date = forms.DateField(
+        widget=forms.DateInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Choose the starting date",
+                "type": "date",
+                "required": True,
+            }
+        )
+    )
+    b_end_date = forms.DateField(
+        widget=forms.DateInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Choose the ending date",
+                "type": "date",
+                "required": True,
+            }
+        )
+    )
+
+
+class FutureTestForexForm(forms.Form):
+    f_forex = forms.ModelChoiceField(
+        queryset=Forex.objects.all(),
+        to_field_name="symbol",
+        empty_label="Choose the currency",
+        widget=forms.Select(
+            attrs={
+                "class": "form-control assets_dropdown",
+                "id": "form-assets",
+                "required": True,
+            }
+        ),
+    )
+    f_amount = forms.DecimalField(
+        widget=forms.NumberInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Enter the amount",
+                "step": "any",
+                "required": True,
+            }
+        )
+    )
+    f_rate = forms.DecimalField(
+        required=True,
+        widget=forms.NumberInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Enter the return rate",
+                "step": "any",
+                "required": True,
+            },
+        ),
+    )
+    f_start_date = forms.DateField(
+        widget=forms.DateInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Choose the starting date",
+                "type": "date",
+                "required": True,
+            }
+        )
+    )
+    f_end_date = forms.DateField(
+        widget=forms.DateInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Choose the ending date",
+                "type": "date",
+                "required": True,
+            }
+        )
+    )

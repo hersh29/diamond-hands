@@ -156,7 +156,8 @@ class Forex(models.Model):
     symbol = models.CharField(
         max_length=10, unique=True, help_text="Currency ticker symbol (e.g., INR)"
     )
-    exchange = models.CharField(
+    exchange = models.CharField(max_length=255, help_text="Exchange (e.g. NYSE )")
+    currency_name = models.CharField(
         max_length=255, help_text="Currency (e.g., Indian Rupee)"
     )
     country = models.CharField(
@@ -209,7 +210,9 @@ class ForexPrice(models.Model):
         decimal_places=2,
         help_text="Closing price of the forex on that date.",
     )
-    volume = models.BigIntegerField(help_text="Volume of currency traded on that date.")
+    volume = models.BigIntegerField(
+        help_text="Volume of currency traded on that date.", null=True, blank=True
+    )
 
     class Meta:
         verbose_name = "Forex Price"
