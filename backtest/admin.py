@@ -1,7 +1,15 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Crypto, CryptoPrice, CustomUser, Stock, StockPrice
+from .models import (
+    Crypto,
+    CryptoPrice,
+    CustomUser,
+    Forex,
+    ForexPrice,
+    Stock,
+    StockPrice,
+)
 
 
 class StockAdmin(admin.ModelAdmin):
@@ -55,3 +63,20 @@ class CustomUserAdmin(UserAdmin):
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
+
+
+class ForexAdmin(admin.ModelAdmin):
+    list_display = ["symbol", "exchange", "country"]
+    search_fields = ["symbol", "country"]
+
+
+admin.site.register(Forex, ForexAdmin)
+
+
+class ForexPriceAdmin(admin.ModelAdmin):
+    list_display = ["forex", "date", "open", "high", "low", "close", "volume"]
+    search_fields = ["forex__symbol", "date"]
+    list_filter = ["date", "forex"]
+
+
+admin.site.register(ForexPrice, ForexPriceAdmin)

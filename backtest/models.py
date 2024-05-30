@@ -170,8 +170,8 @@ class Forex(models.Model):
     )
 
     class Meta:
-        verbose_name = "Stock"
-        verbose_name_plural = "Stocks"
+        verbose_name = "Forex"
+        verbose_name_plural = "Forex"
 
     def __str__(self):
         return self.symbol
