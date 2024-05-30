@@ -145,3 +145,75 @@ class CustomUser(AbstractUser):
         max_length=1, choices=[("M", "Male"), ("F", "Female")], null=True, blank=True
     )
     phone_number = models.CharField(max_length=15, null=True, blank=True)
+
+
+class Forex(models.Model):
+    """
+    Forex Model
+    Represents a Forex currency  with attributes like symbol, exchange, and country name.
+    """
+
+    symbol = models.CharField(
+        max_length=10, unique=True, help_text="Currency ticker symbol (e.g., INR)"
+    )
+    exchange = models.CharField(
+        max_length=255, help_text="Currency (e.g., Indian Rupee)"
+    )
+    country = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        help_text="Name of the country (e.g., India )",
+    )
+    start_date = models.DateField(
+        help_text="start of the currency", null=True, blank=True
+    )
+
+    class Meta:
+        verbose_name = "Stock"
+        verbose_name_plural = "Stocks"
+
+    def __str__(self):
+        return self.symbol
+
+
+class ForexPrice(models.Model):
+    """
+    ForexPrice Model
+    Represents a specific price point for a currency on a given date/time with attributes like date, open, high, low, close, and volume.
+    """
+
+    forex = models.ForeignKey(
+        Forex,
+        on_delete=models.CASCADE,
+        help_text="Foreign key referencing the Forex table.",
+    )
+    date = models.DateField(help_text="Date of the forex price.")
+    open = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        help_text="Opening price of the forex on that date.",
+    )
+    high = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        help_text="Highest price of the forex on that date.",
+    )
+    low = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        help_text="Lowest price of the forex on that date.",
+    )
+    close = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        help_text="Closing price of the forex on that date.",
+    )
+    volume = models.BigIntegerField(help_text="Volume of currency traded on that date.")
+
+    class Meta:
+        verbose_name = "Forex Price"
+        verbose_name_plural = "Forex Prices"
+
+    def __str__(self):
+        return f"{self.forex.symbol} - {self.date}"
