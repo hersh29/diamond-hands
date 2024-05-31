@@ -4,16 +4,15 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
 from .caclulatorfunc import *
-from .calulators import Calculator, ForexCalculator
+from .calulators import Calculator
 from .forms import (
     BackTestCryptoForm,
     BackTestForexForm,
     BackTestForm,
     FutureTestCryptoForm,
-    FutureTestForexForm,
     FutureTestForm,
 )
-from .models import Crypto, Forex, Stock
+from .models import Crypto, Stock
 
 
 def home(request):
@@ -215,88 +214,5 @@ def crypto(request):
 
 
 def forex(request):
-    context = {}
-    f_form = FutureTestForexForm()
-    b_form = BackTestForexForm()
-
-    if request.method == "POST":
-        if "f_test" in request.POST:
-            f_form = FutureTestForexForm(request.POST)
-            if f_form.is_valid():
-                f_calc = ForexCalculator(
-                    f_form.cleaned_data["f_start_date"],
-                    f_form.cleaned_data["f_end_date"],
-                    f_form.cleaned_data["f_forex"],
-                    f_form.cleaned_data["f_amount"],
-                    f_form.cleaned_data["f_rate"],
-                )
-                f_company = Forex.objects.get(symbol=f_form.cleaned_data["f_forex"])
-                context.update(
-                    {
-                        "f_success": True,
-                        "f_forex": f_company.currency_name,
-                        "f_start_date": f_form.cleaned_data["f_start_date"],
-                        "f_end_date": f_form.cleaned_data["f_end_date"],
-                        "f_starting_amount": f_form.cleaned_data["f_amount"],
-                        "f_ending_amount": f_calc.ending_amount(),
-                        "f_start_opening_price": f_calc.start_date_opening_price(),
-                        "f_end_opening_price": f_calc.end_date_opening_price(),
-                        "f_total_shares": f_calc.total_shares(),
-                        "f_difference_in_amount": f_calc.difference_in_amount(),
-                        "f_difference_in_percentage": f_calc.difference_in_percentage(),
-                        "f_yearly_return": f_calc.year_to_year_return(),
-                        "f_monthly_return": f_calc.month_to_month_return(),
-                        "f_state": f_calc.state(),
-                        "f_period_values": f_calc.get_periods_values(),
-                        "f_form": f_form,
-                        "tab_id": "two",
-                        "link_id": "two_link",
-                        "otab_id": "one",
-                        "olink_id": "one_link",
-                    }
-                )
-
-        if "b_test" in request.POST:
-            b_form = BackTestForexForm(request.POST)
-            if b_form.is_valid():
-                b_forex = Forex.objects.get(symbol=b_form.cleaned_data["b_forex"])
-                start_date = b_form.cleaned_data["b_start_date"]
-
-                if b_forex.start_date is not None and b_forex.start_date > start_date:
-                    context.update({"date_error": True, "ini_date": b_forex.start_date})
-                else:
-                    b_calc = ForexCalculator(
-                        b_form.cleaned_data["b_start_date"],
-                        b_form.cleaned_data["b_end_date"],
-                        b_form.cleaned_data["b_forex"],
-                        b_form.cleaned_data["b_amount"],
-                        None,
-                    )
-                    b_company = Forex.objects.get(symbol=b_form.cleaned_data["b_forex"])
-                    context.update(
-                        {
-                            "b_success": True,
-                            "b_forex": b_company.currency_name,
-                            "b_start_date": b_form.cleaned_data["b_start_date"],
-                            "b_end_date": b_form.cleaned_data["b_end_date"],
-                            "b_starting_amount": b_form.cleaned_data["b_amount"],
-                            "b_ending_amount": b_calc.ending_amount(),
-                            "b_start_opening_price": b_calc.start_date_opening_price(),
-                            "b_end_opening_price": b_calc.end_date_opening_price(),
-                            "b_total_shares": b_calc.total_shares(),
-                            "b_difference_in_amount": b_calc.difference_in_amount(),
-                            "b_difference_in_percentage": b_calc.difference_in_percentage(),
-                            "b_yearly_return": b_calc.year_to_year_return(),
-                            "b_monthly_return": b_calc.month_to_month_return(),
-                            "b_state": b_calc.state(),
-                            "b_period_values": b_calc.get_periods_values(),
-                            "b_form": b_form,
-                            "tab_id": "one",
-                            "link_id": "one_link",
-                            "otab_id": "two",
-                            "olink_id": "two_link",
-                        }
-                    )
-    context.update({"f_form": f_form, "b_form": b_form})
-    pprint(context)
-    return render(request, "backtest/forex.html", context=context)
+    form = BackTestForexForm()
+    return render(request, "backtest/forex.html", {"form": form})

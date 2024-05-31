@@ -6,7 +6,7 @@
   class="main-banner-wrap-layout1 bg-common overlay-dark-30 bg--gradient-top-30"
   style="
     background: #0a1611;
-    padding-bottom: 50px !important;
+    padding-bottom: 0 !important;
     padding-top: 110px !important;
   "
 >
@@ -21,34 +21,6 @@
             class="listygo-text-box listing-details-menu"
             style="padding: 0 0 0 0 !important; background: #0a1611 !important"
           >
-            <ul
-              class="nav nav-tabs"
-              style="
-                border: none !important;
-                justify-content: center !important;
-                padding: 10px !important;
-              "
-            >
-              <li class="nav-item">
-                <a
-                  href="#one"
-                  data-toggle="tab"
-                  aria-expanded="false"
-                  class="active"
-                  id="one_link"
-                  >Back Testing</a
-                >
-              </li>
-              <li class="nav-item">
-                <a
-                  href="#two"
-                  data-toggle="tab"
-                  aria-expanded="false"
-                  id="two_link"
-                  >Future Testing</a
-                >
-              </li>
-            </ul>
             <div class="tab-content">
               <div role="tabpanel" class="tab-pane fade active show" id="one">
                 <div
@@ -59,288 +31,85 @@
                 >
                   <section
                     class="main-banner-wrap-layout1 bg-common overlay-dark-30 bg--gradient-top-30"
-                    style="background: #0a1611; padding: 0 !important"
+                    style="background: #0a1611; padding-top: 100px !important; padding-bottom: 0 !important;"
                   >
                     <div class="container">
                       <div class="main-banner-box-layout1">
-                        <h1 class="item-title">Start Forex Backtesting</h1>
+                        <h1 class="item-title">Start Forex Testing</h1>
                         <form
                           id="category-search-form"
                           class="category-search-form"
                           method="post"
                         >
                           {% csrf_token %}
-                          <ul class="form-items">
-                            <li>
-                              <div class="input-group stylish-input-group">
-                                {{b_form.b_forex}}
-                              </div>
+                          <ul class="d-flex flex-wrap">
+                            <li class="col-lg-6 col-12">
+                                <div class="input-group stylish-input-group">
+                                    {{form.from_forex}}
+                                </div>
                             </li>
-                            <li>
-                              <div class="input-group stylish-input-group">
-                                {{b_form.b_amount}}
-                              </div>
+                        
+                            <li class="col-lg-6 col-12">
+                                <div class="input-group stylish-input-group">
+                                    {{form.to_forex}}
+                                </div>
                             </li>
-                          </ul>
-                          <ul class="form-items">
-                            <li>
-                              <div class="input-group stylish-input-group">
-                                {{b_form.b_start_date}}
-                              </div>
+                        </ul>
+                        <ul class="d-flex flex-wrap">
+                          <li class="col-lg-6 col-12">
+                            <div class="input-group stylish-input-group">
+                                {{form.amount}}
+                            </div>
+                        </li>
+                            <li class="col-lg-6 col-12">
+                                <div class="input-group stylish-input-group">
+                                    {{form.date_forex}}
+                                </div>
                             </li>
-                            <li>
-                              <div class="input-group stylish-input-group">
-                                {{b_form.b_end_date}}
-                              </div>
-                            </li>
-                            <li>
-                              <div class="form-group mb-0">
-                                <button
-                                  type="submit"
-                                  class="item-btn calc"
-                                  name="b_test"
-                                >
-                                  Calculate
-                                </button>
-                              </div>
-                            </li>
-                          </ul>
+                        </ul>
                         </form>
                       </div>
                     </div>
                   </section>
-                  {% if date_error %}
+                  
                   <section
-                    class="category-wrap-layout1 padding-top-9p6 padding-bottom-7 overlay-dark-70 parallaxie bg--dark"
-                    style="background: rgb(11, 23, 19) !important"
-                  >
-                    <div class="container">
-                      <div class="section-heading heading-light heading-center">
-                        No data available for that date. Please select the date
-                        after {{ ini_date }}
-                      </div>
+                  class="category-wrap-layout1 padding-bottom-7 overlay-dark-70 parallaxie bg--dark"
+                  style="background: rgb(11, 23, 19) !important; padding-top: 0 !important;">
+                  <div class="container">
+                    <div class="section-heading heading-light heading-center">
+                      
+                      {% comment %} <div class="item-sub-title">
+                        Showing result of 
+                      </div> {% endcomment %}
+                      
+                      <h2 class="item-title">May 23 2020</h2>
                     </div>
-                  </section>
-                  {% else %} {% if b_success %}
-                  <section
-                    class="category-wrap-layout1 padding-top-9p6 padding-bottom-7 overlay-dark-70 parallaxie bg--dark"
-                    style="background: rgb(11, 23, 19) !important"
-                  >
-                    <div class="container">
-                      <div class="section-heading heading-light heading-center">
-                        {% comment %}
-                        <div class="item-sub-title">
-                          Explore some of the best place by categories
+                    <div class="row">
+                      <div class="col-lg-6 col-md-6">
+                        <div class="category-box-layout1">
+                          <h3 class="item-title">
+                            <a style="color: white">$ 500</a>
+                          </h3>
+                          <div class="home-number" style="color: white">
+                           
+                          </div>
                         </div>
-                        {% endcomment %}
-                        <h2 class="item-title">Results</h2>
                       </div>
-                      <div class="row">
-                        <div class="col-lg-6 col-md-6">
-                          <div class="category-box-layout1">
-                            <h3 class="item-title">
-                              <a style="color: white">${{b_starting_amount}}</a>
-                            </h3>
-                            <div class="home-number" style="color: white">
-                              Your investment got you
-                              {{b_total_shares|floatformat:2}} shares at
-                              ${{b_start_opening_price|floatformat:2}} per share
-                              of {{ b_forex }} on {{b_start_date}}
-                            </div>
+                      <div class="col-lg-6 col-md-6">
+                        <div class="category-box-layout1">
+                          <h3 class="item-title">
+                            <a style="color: white"
+                              >$ 1000</a
+                            >
+                          </h3>
+                          <div class="home-number" style="color: white">
+                           
                           </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                          <div class="category-box-layout1">
-                            <h3 class="item-title">
-                              <a style="color: white"
-                                >${{b_ending_amount|floatformat:2}}</a
-                              >
-                            </h3>
-                            <div class="home-number" style="color: white">
-                              Selling your shares on {{b_end_date}} at
-                              ${{b_end_opening_price|floatformat:2}} per share
-                              gives you a
-                              ${{b_difference_in_amount|floatformat:2}}
-                              {{b_state}} amount at
-                              {{b_difference_in_percentage|floatformat:2}}%
-                              {{b_state}} rate
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                          <div class="category-box-layout1">
-                            <h3 class="item-title">
-                              <a style="color: white"
-                                >{{b_yearly_return|floatformat:2}}%</a
-                              >
-                            </h3>
-                            <div class="home-number" style="color: white">
-                              Year-over-year change
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                          <div class="category-box-layout1">
-                            <h3 class="item-title">
-                              <a style="color: white"
-                                >{{b_monthly_return|floatformat:2}}%</a
-                              >
-                            </h3>
-                            <div class="home-number" style="color: white">
-                              Month-over-month change
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-lg-12 col-md-12">
-                          <canvas id="b_chart"></canvas>
                         </div>
                       </div>
                     </div>
+                  </div>
                   </section>
-                  {% endif %} {% endif %}
-                </div>
-              </div>
-              <div role="tabpanel" class="tab-pane fade" id="two">
-                <div
-                  style="
-                    background: #070f0c !important;
-                    padding-bottom: 0 !important;
-                  "
-                >
-                  <section
-                    class="main-banner-wrap-layout1 bg-common overlay-dark-30 bg--gradient-top-30"
-                    style="background: #0a1611; padding: 0 !important"
-                  >
-                    <div class="container">
-                      <div class="main-banner-box-layout1">
-                        <h1 class="item-title">Start Forex Future Testing</h1>
-                        <form
-                          id="category-search-form"
-                          class="category-search-form"
-                          method="post"
-                        >
-                          {% csrf_token %}
-                          <ul class="form-items">
-                            <li>
-                              <div class="input-group stylish-input-group">
-                                {{f_form.f_forex}}
-                              </div>
-                            </li>
-                            <li>
-                              <div class="input-group stylish-input-group">
-                                {{f_form.f_amount}}
-                              </div>
-                            </li>
-                            <li>
-                              <div class="input-group stylish-input-group">
-                                {{f_form.f_rate}}
-                              </div>
-                            </li>
-                          </ul>
-                          <ul class="form-items">
-                            <li>
-                              <div class="input-group stylish-input-group">
-                                {{f_form.f_start_date}}
-                              </div>
-                            </li>
-                            <li>
-                              <div class="input-group stylish-input-group">
-                                {{f_form.f_end_date}}
-                              </div>
-                            </li>
-                            <li>
-                              <div class="form-group mb-0">
-                                <button
-                                  type="submit"
-                                  class="item-btn calc"
-                                  name="f_test"
-                                >
-                                  Calculate
-                                </button>
-                              </div>
-                            </li>
-                          </ul>
-                        </form>
-                      </div>
-                    </div>
-                  </section>
-                  {% if f_success %}
-                  <section
-                    class="category-wrap-layout1 padding-top-9p6 padding-bottom-7 overlay-dark-70 parallaxie bg--dark"
-                    style="background: rgb(11, 23, 19) !important"
-                  >
-                    <div class="container">
-                      <div class="section-heading heading-light heading-center">
-                        {% comment %}
-                        <div class="item-sub-title">
-                          Explore some of the best place by categories
-                        </div>
-                        {% endcomment %}
-                        <h2 class="item-title">Results</h2>
-                      </div>
-                      <div class="row">
-                        <div class="col-lg-6 col-md-6">
-                          <div class="category-box-layout1">
-                            <h3 class="item-title">
-                              <a style="color: white">${{f_starting_amount}}</a>
-                            </h3>
-                            <div class="home-number" style="color: white">
-                              Your investment got you
-                              {{f_total_shares|floatformat:2}} shares at
-                              ${{f_start_opening_price|floatformat:2}} per share
-                              of {{ f_forex }} on {{f_start_date}}
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                          <div class="category-box-layout1">
-                            <h3 class="item-title">
-                              <a style="color: white"
-                                >${{f_ending_amount|floatformat:2}}</a
-                              >
-                            </h3>
-                            <div class="home-number" style="color: white">
-                              Selling your shares on {{f_end_date}} at
-                              ${{f_end_opening_price|floatformat:2}} per share
-                              gives you a
-                              ${{f_difference_in_amount|floatformat:2}}
-                              {{f_state}} amount at
-                              {{f_difference_in_percentage|floatformat:2}}%
-                              {{f_state}} rate
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                          <div class="category-box-layout1">
-                            <h3 class="item-title">
-                              <a style="color: white"
-                                >{{f_yearly_return|floatformat:2}}%</a
-                              >
-                            </h3>
-                            <div class="home-number" style="color: white">
-                              Year-over-year change
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6">
-                          <div class="category-box-layout1">
-                            <h3 class="item-title">
-                              <a style="color: white"
-                                >{{f_monthly_return|floatformat:2}}%</a
-                              >
-                            </h3>
-                            <div class="home-number" style="color: white">
-                              Month-over-month change
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-lg-12 col-md-12">
-                          <canvas id="f_chart"></canvas>
-                        </div>
-                      </div>
-                    </div>
-                  </section>
-                  {% endif %}
                 </div>
               </div>
             </div>
@@ -351,75 +120,6 @@
   </div>
 </section>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-{% if b_success %}
-<script>
-  var b_period_values = {{ b_period_values|safe }};
-  var b_labels = b_period_values.map(function(item) {
-      return item[0];
-  });
-  var b_data = b_period_values.map(function(item) {
-      return item[1];
-  });
-
-  var b_ctx = document.getElementById('b_chart').getContext('2d');
-  var b_chart = new Chart(b_ctx, {
-      type: 'line',
-      data: {
-          labels: b_labels,
-          datasets: [{
-              label: 'Return on investment',
-              data: b_data,
-              fill: false,
-              borderColor: 'rgb(75, 192, 192)',
-              tension: 0.1
-          }]
-      },
-      options: {
-          responsive: true,
-          scales: {
-              y: {
-                  beginAtZero: true
-              }
-          }
-      }
-  });
-</script>
-{% endif %} {% if f_success %}
-<script>
-  var f_period_values = {{ f_period_values|safe }};
-  var f_labels = f_period_values.map(function(item) {
-      return item[0];
-  });
-  var f_data = f_period_values.map(function(item) {
-      return item[1];
-  });
-
-  var f_ctx = document.getElementById('f_chart').getContext('2d');
-  var f_chart = new Chart(f_ctx, {
-      type: 'line',
-      data: {
-          labels: f_labels,
-          datasets: [{
-              label: 'Return on investment',
-              data: f_data,
-              fill: false,
-              borderColor: 'rgb(75, 192, 192)',
-              tension: 0.1
-          }]
-      },
-      options: {
-          responsive: true,
-          scales: {
-              y: {
-                  beginAtZero: true
-              }
-          }
-      }
-  });
-</script>
-{% endif %}
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -433,94 +133,24 @@
       var today = new Date().toISOString().split('T')[0];
 
       // For id_b_start_date and id_b_end_date
-      document.getElementById('id_b_start_date').setAttribute('max', today);
-      document.getElementById('id_b_end_date').setAttribute('max', today);
+      document.getElementById('id_date_forex').setAttribute('max', today);
 
-      document.getElementById('id_b_start_date').onchange = function() {
+      document.getElementById('id_date_forex').onchange = function() {
           if (this.value > today) {
               alert('Selected date is greater than today. Please select a valid date.');
               this.value = today;
           }
-          document.getElementById('id_b_end_date').setAttribute('min', this.value);
+          document.getElementById('id_date_forex').setAttribute('min', this.value);
       };
 
-      document.getElementById('id_b_end_date').onchange = function() {
+      document.getElementById('id_date_forex').onchange = function() {
           if (this.value > today) {
               alert('Selected date is greater than today. Please select a valid date.');
-              this.value = today;
-          }
-      };
-
-      // For id_f_start_date and id_f_end_date
-      document.getElementById('id_f_start_date').setAttribute('min', today);
-      document.getElementById('id_f_end_date').setAttribute('min', today);
-
-      document.getElementById('id_f_start_date').onchange = function() {
-          if (this.value < today) {
-              alert('Selected date is less than today. Please select a valid date.');
-              this.value = today;
-          }
-          document.getElementById('id_f_end_date').setAttribute('min', this.value);
-      };
-
-      document.getElementById('id_f_end_date').onchange = function() {
-          if (this.value < today) {
-              alert('Selected date is less than today. Please select a valid date.');
               this.value = today;
           }
       };
   });
 </script>
-
-{% comment %}
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    let previousStartDate = document.querySelector("#id_start_date").value;
-    const startDate = document.querySelector("#id_start_date");
-    const endDate = document.querySelector("#id_end_date");
-    const rate = document.querySelector("#id_rate");
-    const form = document.querySelector("#category-search-form");
-
-    function checkDate() {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      const selectedStartDate = new Date(startDate.value);
-      const selectedEndDate = new Date(endDate.value);
-
-      if (selectedStartDate > tomorrow) {
-        alert("Start date cannot be in the future.");
-        startDate.value = "";
-        return false;
-      }
-
-      if (selectedStartDate > selectedEndDate) {
-        alert("End date cannot be less than start date.");
-        endDate.value = "";
-        return false;
-      }
-
-      previousStartDate = startDate.value;
-
-      if (selectedStartDate > tomorrow || selectedEndDate > tomorrow) {
-        rate.readOnly = false;
-        rate.required = true;
-        rate.classList.remove("low-opacity");
-      } else {
-        rate.readOnly = true;
-        rate.required = false;
-        rate.value = "";
-        rate.classList.add("low-opacity");
-      }
-    }
-
-    startDate.addEventListener("change", checkDate);
-    endDate.addEventListener("change", checkDate);
-    checkDate();
-  });
-</script>
-{% endcomment %}
 
 <style>
   #f_chart {
