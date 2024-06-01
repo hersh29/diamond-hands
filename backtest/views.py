@@ -15,7 +15,7 @@ from .forms import (
     FutureTestCryptoForm,
     FutureTestForm,
 )
-from .models import Crypto, ForexPrice, Stock
+from .models import Crypto, Stock
 
 
 def home(request):

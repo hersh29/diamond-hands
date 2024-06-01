@@ -1,7 +1,7 @@
 from allauth.account.forms import SignupForm
 from django import forms
 
-from .models import Crypto, Forex, Stock
+from .models import Crypto, Stock
 
 
 class BackTestForm(forms.Form):

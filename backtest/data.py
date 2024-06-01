@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from twelvedata import TDClient
 
-from .models import Crypto, CryptoPrice, Forex, ForexPrice, Stock, StockPrice
+from .models import Crypto, CryptoPrice, Stock, StockPrice
 
 td = TDClient(apikey=settings.TWELVE_API_KEY)
 
@@ -107,68 +107,50 @@ def save_crypto_prices(symbol):
             time.sleep(60)
 
 
-def save_forex_price(symbol):
-    INTERVAL = "1day"
-    START_DATE = datetime.strptime("2023-06-01", "%Y-%m-%d")
-    END_DATE = datetime.now()
+# def save_forex_price(symbol):
+#     INTERVAL = "1day"
+#     START_DATE = datetime.strptime("2023-06-01", "%Y-%m-%d")
+#     END_DATE = datetime.now()
 
-    try:
-        forex = Forex.objects.get(symbol=symbol)
-    except ObjectDoesNotExist:
-        print(f"Forex with symbol {symbol} does not exist.")
-        return
+#     try:
+#         forex = Forex.objects.get(symbol=symbol)
+#     except ObjectDoesNotExist:
+#         print(f"Forex with symbol {symbol} does not exist.")
+#         return
 
-    current_start_date = START_DATE
-    request_count = 0
-    while current_start_date < END_DATE:
-        current_end_date = current_start_date + timedelta(days=30)
-        if current_end_date > END_DATE:
-            current_end_date = END_DATE
+#     current_start_date = START_DATE
+#     request_count = 0
+#     while current_start_date < END_DATE:
+#         current_end_date = current_start_date + timedelta(days=30)
+#         if current_end_date > END_DATE:
+#             current_end_date = END_DATE
 
-        prices = td.time_series(
-            symbol=symbol,
-            interval=INTERVAL,
-            start_date=current_start_date.strftime("%Y-%m-%d"),
-            end_date=current_end_date.strftime("%Y-%m-%d"),
-        ).as_json()
+#         prices = td.time_series(
+#             symbol=symbol,
+#             interval=INTERVAL,
+#             start_date=current_start_date.strftime("%Y-%m-%d"),
+#             end_date=current_end_date.strftime("%Y-%m-%d"),
+#         ).as_json()
 
-        for price in prices:
-            forex_price, created = ForexPrice.objects.get_or_create(
-                forex=forex,
-                date=price["datetime"],
-                defaults={
-                    "open": price["open"],
-                    "high": price["high"],
-                    "low": price["low"],
-                    "close": price["close"],
-                    "volume": price.get("volume"),
-                },
-            )
-            if created:
-                print(f"Created ForexPrice for {price['datetime']}")
-            else:
-                print(f"ForexPrice for {price['datetime']} already exists")
+#         for price in prices:
+#             forex_price, created = ForexPrice.objects.get_or_create(
+#                 forex=forex,
+#                 date=price["datetime"],
+#                 defaults={
+#                     "open": price["open"],
+#                     "high": price["high"],
+#                     "low": price["low"],
+#                     "close": price["close"],
+#                     "volume": price.get("volume"),
+#                 },
+#             )
+#             if created:
+#                 print(f"Created ForexPrice for {price['datetime']}")
+#             else:
+#                 print(f"ForexPrice for {price['datetime']} already exists")
 
-        current_start_date += timedelta(days=31)  # Move the start date forward
+#         current_start_date += timedelta(days=31)  # Move the start date forward
 
-        request_count += 1
-        if request_count % 7 == 0:
-            time.sleep(60)
-
-
-# save_forex_price("USD")
-
-
-"""
---------------	
-INR/USD		    : 2014-09-08    
---------------
-NZD/USD        
-HKD/USD	        
-CHF/USD		    
-CAD/USD	
-AUD/USD		  
-GBP/USD		  
-EUR/USD		
-USD
-"""
+#         request_count += 1
+#         if request_count % 7 == 0:
+#             time.sleep(60)
