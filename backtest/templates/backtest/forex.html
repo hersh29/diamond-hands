@@ -58,7 +58,7 @@
                         <ul class="d-flex flex-wrap">
                           <li class="col-lg-6 col-12">
                             <div class="input-group stylish-input-group">
-                                {{form.amount}}
+                                {{form.from_amount}}
                             </div>
                         </li>
                             <li class="col-lg-6 col-12">
@@ -71,8 +71,9 @@
                       </div>
                     </div>
                   </section>
+                  <div id="loader"></div>
                   
-                  <section
+                <section id="result_id"
                   class="category-wrap-layout1 padding-bottom-7 overlay-dark-70 parallaxie bg--dark"
                   style="background: rgb(11, 23, 19) !important; padding-top: 0 !important;">
                   <div class="container">
@@ -82,13 +83,13 @@
                         Showing result of 
                       </div> {% endcomment %}
                       
-                      <h2 class="item-title">May 23 2020</h2>
+                      <h2 class="item-title" id="date_forex_text"></h2>
                     </div>
                     <div class="row">
                       <div class="col-lg-6 col-md-6">
                         <div class="category-box-layout1">
                           <h3 class="item-title">
-                            <a style="color: white">$ 500</a>
+                            <a style="color: white" id="from_amount_text"></a>
                           </h3>
                           <div class="home-number" style="color: white">
                            
@@ -98,8 +99,7 @@
                       <div class="col-lg-6 col-md-6">
                         <div class="category-box-layout1">
                           <h3 class="item-title">
-                            <a style="color: white"
-                              >$ 1000</a
+                            <a style="color: white" id="to_amount_text"></a
                             >
                           </h3>
                           <div class="home-number" style="color: white">
@@ -151,6 +151,58 @@
       };
   });
 </script>
+
+<style>
+  #loader {
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+      $('#result_id').hide();
+      $('#loader').hide();
+      
+      $('#id_from_amount, #id_date_forex, #id_from_forex, #id_to_forex ').change(function() {
+        var fromAmount = $('#id_from_amount').val();
+        if (fromAmount) {
+              $('#result_id').hide();
+              $('#loader').show();
+              $.ajax({
+                  url: '/forex_conversion/',
+                  method: 'POST',
+                  data: $('#category-search-form').serialize(),
+                  success: function(data) {
+                      $('#loader').hide();
+                      if (data.to_forex) {
+                          $('#result_id').show();
+                          $('#from_amount_text').text(data.from_forex + " " + data.from_amount);
+                          $('#to_amount_text').text(data.to_forex + " " + data.to_amount);
+                          $('#date_forex_text').text("Result of "+ " " + data.date_forex);
+                      }
+                  }
+              });
+          } else {
+              $('#loader').hide();
+          }
+      });
+  });
+  </script>
 
 <style>
   #f_chart {

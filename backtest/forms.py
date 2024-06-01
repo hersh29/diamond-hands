@@ -252,31 +252,39 @@ class CustomSignupForm(SignupForm):
 
 
 class BackTestForexForm(forms.Form):
-    from_forex = forms.ModelChoiceField(
-        queryset=Forex.objects.all(),
-        to_field_name="symbol",
-        empty_label="From Currency",
+    CURRENCY_CHOICES = [
+        ("INR", "INR"),
+        ("NZD", "NZD"),
+        ("HKD", "HKD"),
+        ("CHF", "CHF"),
+        ("CAD", "CAD"),
+        ("AUD", "AUD"),
+        ("GBP", "GBP"),
+        ("EUR", "EUR"),
+        ("USD", "USD"),
+    ]
+
+    from_forex = forms.ChoiceField(
+        choices=CURRENCY_CHOICES,
         widget=forms.Select(
             attrs={
                 "class": "form-control assets_dropdown",
-                "id": "form-assets",
+                "id": "id_from_forex",
                 "required": True,
             }
         ),
     )
-    to_forex = forms.ModelChoiceField(
-        queryset=Forex.objects.all(),
-        to_field_name="symbol",
-        empty_label="To Currency",
+    to_forex = forms.ChoiceField(
+        choices=CURRENCY_CHOICES,
         widget=forms.Select(
             attrs={
                 "class": "form-control assets_dropdown",
-                "id": "form-assets",
+                "id": "id_to_forex",
                 "required": True,
             }
         ),
     )
-    amount = forms.DecimalField(
+    from_amount = forms.DecimalField(
         widget=forms.NumberInput(
             attrs={
                 "class": "form-control",
@@ -287,6 +295,7 @@ class BackTestForexForm(forms.Form):
         )
     )
     date_forex = forms.DateField(
+        required=False,
         widget=forms.DateInput(
             attrs={
                 "class": "form-control",
@@ -294,5 +303,5 @@ class BackTestForexForm(forms.Form):
                 "type": "date",
                 "required": False,
             }
-        )
+        ),
     )

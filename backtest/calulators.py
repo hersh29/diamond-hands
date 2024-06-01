@@ -146,32 +146,19 @@ class ForexCalculator:
     """Calculate Forex periods and price"""
 
     def __init__(
-        self, start_date: date, end_date: date, symbol: str, amount: float, rate: float
+        self, view_date: date, from_symbol: str, to_symbol: str, from_amount: float
     ) -> None:
-        self.start_date = start_date
-        self.end_date = end_date
-        self.symbol = symbol
-        self.amount = amount
-        self.rate = rate
+        self.view_date = view_date
+        self.from_symbol = from_symbol
+        self.to_symbol = to_symbol
+        self.from_amount = from_amount
         self.td = TDClient(apikey=settings.TWELVE_API_KEY)
 
-    def total_shares(self) -> float:
-        """Get total shares based on start date"""
-        return self.amount / self.day_opening_price(self.start_date)
+    def get_from_amount(self) -> float:
+        """Get from currency amount"""
+        return self.from_amount
 
-    def opening_amount(self) -> float:
-        """Get initial investment of user"""
-        return self.amount
-
-    def ending_amount(self):
-        """Get total amount of ending date"""
-        return self.amount_on_date(self.end_date)
-
-    def amount_on_date(self, on_date: date) -> float:
-        """Get invested amount value on specific date"""
-        return self.total_shares() * self.day_opening_price(on_date)
-
-    def day_opening_price(self, on_date: date) -> float:
+    def day_opening_price(self, on_date) -> float:
         """Get opening price of specific day"""
         fail_count = 0
         while True:
@@ -193,14 +180,6 @@ class ForexCalculator:
                     if fail_count > 3:
                         break
                     on_date -= timedelta(days=1)
-
-            elif on_date > date.today() and self.rate is not None:
-                current_price = self.day_opening_price(date.today() - timedelta(days=1))
-                years = Decimal((on_date - date.today()).days / 365)
-                percent_rate = self.rate / 100
-                future_price = current_price * (1 + percent_rate) ** years
-                print(future_price)
-                return future_price
 
             else:
                 price = ForexPrice.objects.filter(

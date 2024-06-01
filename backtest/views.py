@@ -1,7 +1,10 @@
+from datetime import date, timedelta
 from pprint import pprint
 
-from django.http import HttpResponse
+from currency_converter import ECB_URL, CurrencyConverter
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
+from django.views.decorators.csrf import csrf_exempt
 
 from .caclulatorfunc import *
 from .calulators import Calculator
@@ -12,7 +15,7 @@ from .forms import (
     FutureTestCryptoForm,
     FutureTestForm,
 )
-from .models import Crypto, Stock
+from .models import Crypto, ForexPrice, Stock
 
 
 def home(request):
@@ -216,3 +219,29 @@ def crypto(request):
 def forex(request):
     form = BackTestForexForm()
     return render(request, "backtest/forex.html", {"form": form})
+
+
+@csrf_exempt
+def forex_conversion(request):
+    c = CurrencyConverter(ECB_URL)
+    if request.method == "POST":
+        form = BackTestForexForm(request.POST)
+        if form.is_valid():
+            from_forex = form.cleaned_data["from_forex"]
+            to_forex = form.cleaned_data["to_forex"]
+            from_amount = form.cleaned_data["from_amount"]
+            date_forex = form.cleaned_data["date_forex"] or date.today()
+            if date_forex >= date.today():
+                date_forex = date.today() - timedelta(days=1)
+            to_amount = round(
+                c.convert(from_amount, from_forex, to_forex, date_forex), 2
+            )
+            context = {
+                "from_amount": str(from_amount),
+                "to_amount": str(to_amount),
+                "from_forex": from_forex,
+                "to_forex": to_forex,
+                "date_forex": date_forex,
+            }
+            return JsonResponse(context)
+    return JsonResponse({"error": "Invalid form submission"})
