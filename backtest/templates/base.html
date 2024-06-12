@@ -88,33 +88,18 @@
                                     <li><a  href="{% url 'stock' %}"  style="background: #070F0C; color: white;">Stock</a></li>
                                     <li><a  href="{% url 'crypto' %}" style="background: #070F0C; color: white;" >Crypto</a></li>
                                     <li><a  href="{% url 'forex' %}" style="background: #070F0C; color: white;" >Forex</a></li>
-                                    {% comment %} <li><a  href="{% url 'about' %}" >About</a></li>
-                                    <li>
-                                        <a  href="{% url 'listing' %}" >Listing</a>
-                                    </li>
-    
-                                    <li><a  href="{% url 'blog_list' %}" >Blog</a>
-                            
-                                    </li>
-    
-                                    <li><a  href="{% url 'home' %}" >home</a>
-                            
-                                    </li>
-                                    <li><a  href="{% url 'contact' %}" >Contact</a></li> {% endcomment %}
                                 </ul>
                             </nav>
                         </div>
-                        <div class="col-lg-3 d-none d-lg-flex align-items-center justify-content-end">
+                        <div class="col-lg-3 d-lg-flex align-items-center justify-content-end">
                             <div class="nav-action-elements">
                                 <ul>
-                                    <li>
-                                        {% comment %} <button type="button" class="login-btn" data-toggle="modal" data-target="#myModal">
-                                            <i class="flaticon-profile"></i>Login
-                                        </button> {% endcomment %}
-                                    </li>
-                                    {% if user.is_authenticated %}
+                                {% if user.is_authenticated %}
                                     <li>
                                         <a href="#" class="ghost-btn"><i class="flaticon-profile"></i>{{ user.username }}</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'account_logout' %}" class="ghost-btn"><i class="fa-solid fa-right-from-bracket" style="font-size:20px;"></i>Log out</a>
                                     </li>
                                 {% else %}
                                     <li>
