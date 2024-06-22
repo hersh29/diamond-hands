@@ -1,5 +1,5 @@
 sudo apt-get install pgloader
-pgloader sqlite://db.sqlite3  postgresql://aashish:aashish@localhost:5432/mydatabase                                ─╯
+pgloader sqlite://db.sqlite3  postgresql://diamondhands:diamondhands@localhost:5432/mydatabase
 
 
 #####################
@@ -7,29 +7,30 @@ sudo -i -u postgres
 
 psql
 
-CREATE ROLE aashish LOGIN PASSWORD 'aashish';
+CREATE ROLE diamondhands LOGIN PASSWORD 'diamondhands';
 
-ALTER ROLE aashish SUPERUSER;
+ALTER ROLE diamondhands SUPERUSER;
 
-CREATE DATABASE your_new_database_name;
+CREATE DATABASE mydatabase;
 
 \q
 
 exit
 
-psql -U aashish -d mydatabase
+psql -U diamondhands -d mydatabase
 ####################
 
 
 
 
 
-chmod +x /path/to/save_prices.sh
+chmod +x /root/diamond-hands/save_prices.sh
 
 
 crontab -e
 
 
-0 22 * * * /path/to/save_prices.sh
+0 22 * * * /root/diamond-hands/save_prices.sh
 
+crontab -l
 
