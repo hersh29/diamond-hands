@@ -1,13 +1,16 @@
 asgiref
 certifi
 charset-normalizer
+CurrencyConverter
 Django
 django-allauth
 django-widget-tweaks
 idna
+psycopg2
 python-dotenv
 pytimeparse
 requests
 sqlparse
 twelvedata
 urllib3
+whitenoise
