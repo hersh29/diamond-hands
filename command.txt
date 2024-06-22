@@ -19,3 +19,17 @@ exit
 
 psql -U aashish -d mydatabase
 ####################
+
+
+
+
+
+chmod +x /path/to/save_prices.sh
+
+
+crontab -e
+
+
+0 22 * * * /path/to/save_prices.sh
+
+
