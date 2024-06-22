@@ -21,12 +21,12 @@ class StockPriceAdmin(admin.ModelAdmin):
 admin.site.register(StockPrice, StockPriceAdmin)
 
 
-class CryptoAmin(admin.ModelAdmin):
+class CryptoAdmin(admin.ModelAdmin):
     list_display = ["symbol", "exchange", "crypto_name"]
     search_fields = ["symbol", "crypto_name"]
 
 
-admin.site.register(Crypto, CryptoAmin)
+admin.site.register(Crypto, CryptoAdmin)
 
 
 class CryptoPriceAdmin(admin.ModelAdmin):
