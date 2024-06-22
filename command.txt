@@ -1,0 +1,21 @@
+sudo apt-get install pgloader
+pgloader sqlite://db.sqlite3  postgresql://aashish:aashish@localhost:5432/mydatabase                                ─╯
+
+
+#####################
+sudo -i -u postgres
+
+psql
+
+CREATE ROLE aashish LOGIN PASSWORD 'aashish';
+
+ALTER ROLE aashish SUPERUSER;
+
+CREATE DATABASE your_new_database_name;
+
+\q
+
+exit
+
+psql -U aashish -d mydatabase
+####################

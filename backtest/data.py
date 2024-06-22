@@ -12,7 +12,7 @@ td = TDClient(apikey=settings.TWELVE_API_KEY)
 
 def save_stock_prices(symbol):
     INTERVAL = "1day"
-    START_DATE = datetime.strptime("2014-01-01", "%Y-%m-%d")
+    START_DATE = datetime.strptime("2024-04-01", "%Y-%m-%d")
     END_DATE = datetime.now()
 
     try:
@@ -61,7 +61,7 @@ def save_stock_prices(symbol):
 
 def save_crypto_prices(symbol):
     INTERVAL = "1day"
-    START_DATE = datetime.strptime("2021-5-15", "%Y-%m-%d")
+    START_DATE = datetime.strptime("2024-04-01", "%Y-%m-%d")
     END_DATE = datetime.now()
 
     try:
@@ -105,3 +105,15 @@ def save_crypto_prices(symbol):
         request_count += 1
         if request_count % 7 == 0:
             time.sleep(60)
+
+
+def save_all_prices():
+    all_stocks = Stock.objects.all()
+    for stock in all_stocks:
+        save_stock_prices(stock.symbol)
+        time.sleep(60)
+
+    all_cryptos = Crypto.objects.all()
+    for crypto in all_cryptos:
+        save_crypto_prices(crypto.symbol)
+        time.sleep(60)
