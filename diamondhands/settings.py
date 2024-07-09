@@ -119,3 +119,6 @@ LOGIN_REDIRECT_URL = "home"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_LOGOUT_ON_GET = True
+
+
+CSRF_TRUSTED_ORIGINS = ['https://diamondhands.space', 'https://www.diamondhands.space', 'http://diamondhands.space', 'http://www.diamondhands.space']

@@ -225,12 +225,12 @@ class CustomSignupForm(SignupForm):
     )
     gender = forms.ChoiceField(
         required=False,
-        choices=[("M", "Male"), ("F", "Female")],
+        choices=[("M", "Male"), ("F", "Female"), ("N", "Prefer not to say")],
         label="Gender",
-        widget=forms.Select(
-            attrs={
-                "style": "background: #070F0C !important; color: #c0c0c0 !important; height: 40px; box-shadow:none !important;"
-            }
+        widget=forms.RadioSelect(
+            # attrs={
+            #     # "style": "background: #070F0C !important; color: #c0c0c0 !important; height: 40px; box-shadow:none !important;"
+            # }
         ),
     )
     phone_number = forms.CharField(

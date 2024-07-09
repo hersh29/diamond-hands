@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta content="ie=edge" http-equiv="x-ua-compatible" />
     {% block title %}
-    <title>DiamonHands | Home</title>
+    <title>DiamondHands | Home</title>
     {% endblock title %}
     <meta content="" name="description" />
     <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" />
@@ -82,7 +82,7 @@
                             </div>
                         </div>
                         <div class="col-lg-7 col-12 possition-static" style="background: #070F0C; color: white;">
-                            <nav class="site-nav" style="background: #070F0C; color: white;">
+                            <nav class="site-nav" style="background: #070F0C; color: white; justify-content:center; margin-left:16rem;">
                                 <ul class="site-menu" style="background: #070F0C; color: white;">
                                     <li><a  href="{% url 'home' %}" style="background: #070F0C; color: white;" >Home</a></li>
                                     <li><a  href="{% url 'stock' %}"  style="background: #070F0C; color: white;">Stock</a></li>
@@ -122,10 +122,10 @@
             <section class="footer-top-wrap" style="background:#070F0C;">
                 <div class="container" style="background:#070F0C;">
                     <div class="row" style="background:#070F0C;">
-                        <div class="single-item col-lg-3 col-md-6 col-12">
+                        <div class="single-item col-lg-4 col-md-6 col-12">
                             <div class="footer-box">
                                 <div class="footer-logo">
-                                    <a href="index.html">💎👐</a>
+                                    <a href="{% url 'home' %}">💎👐</a>
                                     {% comment %} <a href="index.html" style="font-size:5px;">💎👐</a> {% endcomment %}
                                     {% comment %} <a href="index.html"><img alt="footer-logo" class="img-fluid"
                                             src="{% static 'backtest/img/footer-logo.png' %}" /></a> {% endcomment %}
@@ -143,7 +143,7 @@
                                 </div> {% endcomment %}
                             </div>
                         </div>
-                        <div class="single-item col-lg-3 col-md-6 col-12">
+                        <div class="single-item col-lg-4 col-md-6 col-12">
                             <div class="footer-box">
                                 <div class="footer-header">
                                     <h3>Backtest</h3>
@@ -158,7 +158,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="single-item col-lg-3 col-md-6 col-12">
+                        <div class="single-item col-lg-4 col-md-6 col-12">
                             <div class="footer-box">
                                 <div class="footer-header">
                                     <h3>Links</h3>
@@ -170,7 +170,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="single-item col-lg-3 col-md-6 col-12">
+                        {% comment %} <div class="single-item col-lg-3 col-md-6 col-12">
                             <div class="footer-box">
                                 <div class="footer-header">
                                     <h3>Follow Us On</h3>
@@ -185,7 +185,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div>
+                        </div> {% endcomment %}
                     </div>
                 </div>
             </section>
