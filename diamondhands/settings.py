@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "widget_tweaks",
     "backtest",
+    # "debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -85,24 +86,25 @@ MIDDLEWARE = [
 ]
 
 
-# DATABASES = {
-#      "default": {
-#          "ENGINE": "django.db.backends.sqlite3",
-#          "NAME": BASE_DIR / "db.sqlite3",
-#      }
-# }
-
 DATABASES = {
-   "default": {
-       "ENGINE": "django.db.backends.postgresql",
-       "NAME": os.getenv("POSTGRES_DB", "your_default_db_name"),
-       "USER": os.getenv("POSTGRES_USER", "your_default_user"),
-       "PASSWORD": os.getenv("POSTGRES_PASSWORD", "your_default_password"),
-       "HOST": os.getenv("POSTGRES_HOST", "localhost"),
-       "PORT": os.getenv("POSTGRES_PORT", "5432"),
-   }
+     "default": {
+         "ENGINE": "django.db.backends.sqlite3",
+         "NAME": BASE_DIR / "db.sqlite3",
+     }
 }
 
+# DATABASES = {
+#    "default": {
+#        "ENGINE": "django.db.backends.postgresql",
+#        "NAME": os.getenv("POSTGRES_DB", "dh"),
+#        "USER": os.getenv("POSTGRES_USER", "pg"),
+#        "PASSWORD": os.getenv("POSTGRES_PASSWORD", ""),
+#        "HOST": os.getenv("POSTGRES_HOST", "localhost"),
+#        "PORT": os.getenv("POSTGRES_PORT", "5432"),
+#    }
+# }
+
+# STATIC_URL = "static/"
 
 CSRF_TRUSTED_ORIGINS = ['http://62.146.176.99']
 
