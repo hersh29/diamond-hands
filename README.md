@@ -1,83 +1,67 @@
 # DiamondHands
 
-DiamondHands: A BackTesting Applicaiton
+A modern, fast, beautifully-designed portfolio backtester and paper-trading
+sandbox. Live at [diamondhands.space](https://diamondhands.space).
 
-# How to setup ?
+> Educational tool, not investment advice. All results are hypothetical and
+> based on historical data which may contain errors. Past performance does not
+> guarantee future results.
 
-## Step 1: Install Python (Skip if you have Python already installed)
+## Repo layout
 
-### On Windows:
+```
+.
+├── web/                  # Next.js 15 + Tailwind + Supabase frontend  (Vercel)
+├── ingest/               # Python yfinance → Supabase price ingestion (GitHub Actions)
+├── supabase/             # SQL migrations, RLS policies, seed
+├── .github/workflows/    # daily ingest cron + web CI
+├── plan/                 # roadmap, decisions, architecture, pricing, disclaimers
+└── legacy/               # archived Django v1
+```
 
-1. Download the Python installer from the [official Python website](https://www.python.org/downloads/).
-2. Run the installer and make sure to check the box that says "Add Python 3.11 to PATH" before you click "Install Now".
+For the source of truth on direction and status, see **[`plan/`](./plan)**.
 
-### On Linux/Mac:
+## Stack
 
-Use a package manager like `apt` for Ubuntu or `brew` for MacOS:
+- **Frontend**: Next.js 15 (App Router) + Tailwind v3 + shadcn-style primitives + Recharts
+- **Backend**: Supabase Postgres + Auth (email + Google OAuth) + RLS
+- **Hosting**: Vercel (web) + GitHub Actions (cron) + Supabase (DB)
+- **Data**: yfinance (EOD prices) — pulled nightly into Supabase
+- **Charts**: Recharts
+- **OG images**: `@vercel/og`
+
+Total recurring cost at zero users: **$0/mo**. See `plan/architecture.md`.
+
+## Quick start (local)
+
+Pre-flight assumed:
+- Supabase project created
+- Vercel project created and pointed at `web/`
+- GitHub repo with secrets configured
 
 ```bash
-# Ubuntu
-sudo apt update
-sudo apt install python3.11
+# 1) Apply DB schema
+psql "$SUPABASE_DB_URL" -f supabase/migrations/0001_init.sql
+psql "$SUPABASE_DB_URL" -f supabase/migrations/0002_policies.sql
+psql "$SUPABASE_DB_URL" -f supabase/seed.sql
 
-# MacOS
-brew install python@3.11
- 
-```
-
-After installing Python 3.11
-Open terminal and follow the below steps
-
-## Step 2: Clone the GitHub Repository
-
-```
-git clone https://github.com/hersh29/diamond-hands.git
-```
-
-Clone the project to your computer in `diamond-hands` folder.
-
-## Step 3: Navigate to the project directory
-
-```
-cd diamond-hands
-```
-
-change the working directory to the application directory.
-
-## Step 4: Create a Virtual Environment(Optional)
-
-```
-python3 -m venv myenv
-```
-
-create a python virtual environment.
-you will see the new folder called `myenv`
-
-for Mac/linux, run this command to activate the virtual environment.
-
-```
-source myenv/bin/activate
-```
-
-for Windows, run this command to activate the virtual environment
-
-```
-myenv\Scripts\activate
-``` 
-
-## Step 5: Install the Project Dependencies
-
-```
+# 2) Backfill historical prices
+cd ingest
+python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+export SUPABASE_URL=...
+export SUPABASE_SERVICE_ROLE_KEY=...
+python backfill.py --start 2014-01-01
+
+# 3) Run the web app
+cd ../web
+cp .env.example .env.local   # fill in values
+npm install
+npm run dev
 ```
 
-install all the project libraries.
+Detailed setup steps are in `plan/progress.md`.
 
-## Step 7: Run the Django Server
+## License
 
-```
-python manage.py runserver
-```
-
-You should see output indicating that the server is running, along with the address (http://127.0.0.1:8000/)
-
+TBD. Repo is public for free GitHub Actions minutes — license terms forthcoming.

@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light mode kept minimal — we ship dark-by-default. */
+    --background: 220 30% 98%;
+    --foreground: 220 25% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 12%;
+
+    --primary: 173 80% 64%;            /* #5EEAD4 — ice mint */
+    --primary-foreground: 220 30% 10%;
+
+    --secondary: 220 20% 92%;
+    --secondary-foreground: 220 25% 15%;
+
+    --muted: 220 20% 94%;
+    --muted-foreground: 220 12% 40%;
+
+    --accent: 173 60% 90%;
+    --accent-foreground: 220 30% 10%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 15% 88%;
+    --input:  220 15% 88%;
+    --ring:   173 80% 50%;
+
+    --profit: 158 64% 52%;
+    --loss:   0 72% 65%;
+
+    --radius: 0.625rem;
+  }
+
+  .dark {
+    /* Deep midnight bg, ice-mint accent. */
+    --background: 222 38% 7%;          /* #0A0E1A */
+    --foreground: 210 30% 96%;         /* #F1F5F9 */
+
+    --card: 220 30% 11%;                /* #121826 */
+    --card-foreground: 210 30% 96%;
+    --popover: 220 30% 11%;
+    --popover-foreground: 210 30% 96%;
+
+    --primary: 173 80% 64%;             /* #5EEAD4 */
+    --primary-foreground: 220 38% 9%;
+
+    --secondary: 220 20% 17%;
+    --secondary-foreground: 210 30% 96%;
+
+    --muted: 220 20% 15%;
+    --muted-foreground: 220 12% 60%;
+
+    --accent: 173 40% 22%;
+    --accent-foreground: 173 70% 75%;
+
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 18% 18%;              /* #1F2937-ish */
+    --input:  220 18% 18%;
+    --ring:   173 80% 64%;
+
+    --profit: 158 64% 52%;              /* #34D399 */
+    --loss:   0 75% 70%;                /* #F87171 */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+  /* Tabular numbers for prices/metrics */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Brand-specific subtle radial backdrop for hero sections */
+@layer utilities {
+  .bg-grid {
+    background-image:
+      radial-gradient(circle at 25% 30%, hsl(var(--primary) / 0.10), transparent 40%),
+      radial-gradient(circle at 75% 70%, hsl(var(--primary) / 0.05), transparent 50%);
+  }
+  .text-gradient {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(210 90% 70%) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}

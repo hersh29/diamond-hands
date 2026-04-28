@@ -1,0 +1,112 @@
+import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { createClient } from "@/lib/supabase/server";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EquityCurveChart } from "@/components/equity-curve-chart";
+import { MetricsGrid } from "@/components/metrics-grid";
+import { displaySymbol, formatPercent } from "@/lib/utils";
+import type { BacktestParams, BacktestResult } from "@/lib/backtest/types";
+
+interface ScenarioRow {
+  name: string;
+  params: BacktestParams;
+  results: BacktestResult | null;
+  view_count: number;
+  created_at: string;
+}
+
+async function loadScenario(slug: string): Promise<ScenarioRow | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("scenarios")
+    .select("name, params, results, view_count, created_at")
+    .eq("share_slug", slug)
+    .eq("is_public", true)
+    .single();
+  return (data as ScenarioRow) ?? null;
+}
+
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string }> },
+): Promise<Metadata> {
+  const { slug } = await params;
+  const sc = await loadScenario(slug);
+  if (!sc) return { title: "Scenario not found" };
+
+  const m = sc.results?.metrics;
+  const description = m
+    ? `${formatPercent(m.cagr * 100)} CAGR · ${formatPercent(m.totalReturn * 100)} total return · ${formatPercent(m.maxDrawdown * 100)} max drawdown`
+    : "DiamondHands backtest scenario";
+
+  return {
+    title: sc.name,
+    description,
+    openGraph: { title: sc.name, description },
+  };
+}
+
+export default async function SharedScenarioPage(
+  { params }: { params: Promise<{ slug: string }> },
+) {
+  const { slug } = await params;
+  const sc = await loadScenario(slug);
+  if (!sc) notFound();
+
+  // Best-effort view counter (RLS-safe RPC)
+  const supabase = await createClient();
+  await supabase.rpc("increment_scenario_view", { slug }).then(() => {}, () => {});
+
+  const result = sc.results;
+  const p = sc.params;
+
+  return (
+    <div className="container py-8 md:py-12">
+      <div className="mb-6">
+        <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{sc.name}</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Saved {new Date(sc.created_at).toLocaleDateString()} · Hypothetical results based on adjusted-close prices.
+        </p>
+      </div>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Allocation</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            {p.assets.map((a) => (
+              <span key={a.symbol} className="rounded-md bg-secondary px-2.5 py-1 text-sm">
+                <span className="font-mono font-semibold">{displaySymbol(a.symbol)}</span>{" "}
+                <span className="text-muted-foreground">{Math.round(a.weight * 100)}%</span>
+              </span>
+            ))}
+          </div>
+          <div className="mt-3 text-sm text-muted-foreground">
+            {p.startDate} → {p.endDate} · ${p.initialAmount.toLocaleString()} initial
+            {p.contribution && ` · +$${p.contribution.amount.toLocaleString()}/${p.contribution.frequency}`}
+            {p.rebalance && p.rebalance !== "never" && ` · rebalance ${p.rebalance}`}
+          </div>
+        </CardContent>
+      </Card>
+
+      {result ? (
+        <>
+          <Card className="mb-4">
+            <CardHeader>
+              <CardTitle>Equity curve</CardTitle>
+              <p className="text-xs text-muted-foreground">Hypothetical results. Past performance does not predict future returns.</p>
+            </CardHeader>
+            <CardContent>
+              <EquityCurveChart data={result.equityCurve} />
+            </CardContent>
+          </Card>
+          <MetricsGrid m={result.metrics} />
+        </>
+      ) : (
+        <Card className="p-12 text-center text-muted-foreground">
+          This scenario has no cached results.
+        </Card>
+      )}
+    </div>
+  );
+}
