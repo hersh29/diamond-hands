@@ -1,60 +1,109 @@
 import type { BacktestMetrics } from "@/lib/backtest/types";
-import { Card } from "@/components/ui/card";
+import { Kpi, KpiBar, KpiCell } from "@/components/kpi";
 import { formatCurrency, formatPercent } from "@/lib/utils";
 
 export function MetricsGrid({ m }: { m: BacktestMetrics }) {
   const profit = m.finalValue - m.totalContributed;
-  const profitClass = profit >= 0 ? "text-profit" : "text-loss";
+  const profitPositive = profit >= 0;
   const benchmarkDelta =
-    m.benchmarkFinalValue != null
-      ? m.finalValue - m.benchmarkFinalValue
-      : null;
+    m.benchmarkFinalValue != null ? m.finalValue - m.benchmarkFinalValue : null;
   const beatsBenchmark = benchmarkDelta != null && benchmarkDelta > 0;
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      <Metric label="Final value"   value={formatCurrency(m.finalValue)} />
-      <Metric label="Total contributed" value={formatCurrency(m.totalContributed)} muted />
-      <Metric label="Profit / loss" value={`${profit >= 0 ? "+" : ""}${formatCurrency(profit)}`} className={profitClass} />
-      <Metric label="Total return"  value={`${m.totalReturn >= 0 ? "+" : ""}${formatPercent(m.totalReturn * 100)}`} className={profitClass} />
-
-      <Metric label="CAGR"          value={formatPercent(m.cagr * 100)} />
-      <Metric label="Volatility"    value={formatPercent(m.volatility * 100)} muted />
-      <Metric label="Sharpe ratio"  value={m.sharpe.toFixed(2)} muted />
-      <Metric label="Max drawdown"  value={formatPercent(m.maxDrawdown * 100)} className="text-loss" />
-
-      {m.bestYear  && <Metric label={`Best year (${m.bestYear.year})`}   value={formatPercent(m.bestYear.return * 100)}  className="text-profit" />}
-      {m.worstYear && <Metric label={`Worst year (${m.worstYear.year})`} value={formatPercent(m.worstYear.return * 100)} className="text-loss"  />}
-
-      {m.benchmarkFinalValue != null && (
-        <>
-          <Metric
-            label="vs SPY"
-            value={`${beatsBenchmark ? "+" : ""}${formatCurrency(benchmarkDelta!)}`}
-            className={beatsBenchmark ? "text-profit" : "text-loss"}
+    <div className="space-y-3">
+      {/* Hero KPI bar — the four most important numbers */}
+      <KpiBar>
+        <KpiCell>
+          <Kpi label="Final value" value={formatCurrency(m.finalValue)} size="lg" />
+        </KpiCell>
+        <KpiCell>
+          <Kpi
+            label="Total return"
+            value={`${profitPositive ? "+" : ""}${formatPercent(m.totalReturn * 100)}`}
+            delta={`${profitPositive ? "+" : ""}${formatCurrency(profit)}`}
+            deltaTone={profitPositive ? "profit" : "loss"}
+            size="lg"
+            className={profitPositive ? "text-profit" : "text-loss"}
           />
-          {m.benchmarkCagr != null && (
-            <Metric
-              label="SPY CAGR"
-              value={formatPercent(m.benchmarkCagr * 100)}
-              muted
+        </KpiCell>
+        <KpiCell>
+          <Kpi label="CAGR" value={formatPercent(m.cagr * 100)} size="lg" />
+        </KpiCell>
+        <KpiCell>
+          <Kpi
+            label="Max drawdown"
+            value={formatPercent(m.maxDrawdown * 100)}
+            size="lg"
+            className="text-loss"
+          />
+        </KpiCell>
+      </KpiBar>
+
+      {/* Secondary stats — denser, smaller */}
+      <div className="terminal-card grid grid-cols-2 divide-x divide-y divide-border/60 sm:grid-cols-4 sm:divide-y-0">
+        <SmallStat label="Contributed"   value={formatCurrency(m.totalContributed)} />
+        <SmallStat label="Volatility"    value={formatPercent(m.volatility * 100)} />
+        <SmallStat label="Sharpe"        value={m.sharpe.toFixed(2)} />
+        <SmallStat
+          label="Best year"
+          value={m.bestYear ? `${formatPercent(m.bestYear.return * 100)}` : "—"}
+          hint={m.bestYear ? String(m.bestYear.year) : undefined}
+          tone="profit"
+        />
+      </div>
+
+      <div className="terminal-card grid grid-cols-2 divide-x divide-y divide-border/60 sm:grid-cols-4 sm:divide-y-0">
+        <SmallStat
+          label="Worst year"
+          value={m.worstYear ? `${formatPercent(m.worstYear.return * 100)}` : "—"}
+          hint={m.worstYear ? String(m.worstYear.year) : undefined}
+          tone="loss"
+        />
+        {m.benchmarkFinalValue != null ? (
+          <>
+            <SmallStat
+              label="vs SPY"
+              value={`${beatsBenchmark ? "+" : ""}${formatCurrency(benchmarkDelta!)}`}
+              tone={beatsBenchmark ? "profit" : "loss"}
             />
-          )}
-        </>
-      )}
+            <SmallStat
+              label="SPY CAGR"
+              value={m.benchmarkCagr != null ? formatPercent(m.benchmarkCagr * 100) : "—"}
+            />
+            <SmallStat
+              label="Alpha (CAGR)"
+              value={m.benchmarkCagr != null
+                ? `${m.cagr - m.benchmarkCagr >= 0 ? "+" : ""}${formatPercent((m.cagr - m.benchmarkCagr) * 100)}`
+                : "—"}
+              tone={m.benchmarkCagr != null && m.cagr > m.benchmarkCagr ? "profit" : "loss"}
+            />
+          </>
+        ) : (
+          <>
+            <SmallStat label="vs benchmark" value="—" />
+            <SmallStat label="Alpha"        value="—" />
+            <SmallStat label="Beta"         value="—" />
+          </>
+        )}
+      </div>
     </div>
   );
 }
 
-function Metric({
-  label, value, muted, className,
-}: { label: string; value: string; muted?: boolean; className?: string }) {
+function SmallStat({
+  label, value, hint, tone,
+}: {
+  label: string; value: string; hint?: string; tone?: "profit" | "loss";
+}) {
+  const toneClass =
+    tone === "profit" ? "text-profit" :
+    tone === "loss"   ? "text-loss"   : "";
   return (
-    <Card className="p-4">
-      <div className="text-xs text-muted-foreground">{label}</div>
-      <div className={`mt-1 text-xl font-semibold tabular ${muted ? "text-muted-foreground" : ""} ${className ?? ""}`}>
-        {value}
-      </div>
-    </Card>
+    <div className="p-4">
+      <div className="eyebrow">{label}</div>
+      <div className={`mt-1 text-base font-semibold tabular ${toneClass}`}>{value}</div>
+      {hint && <div className="mt-0.5 text-[10px] uppercase tracking-wider text-muted-foreground/70">{hint}</div>}
+    </div>
   );
 }
+

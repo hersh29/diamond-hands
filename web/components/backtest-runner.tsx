@@ -156,8 +156,9 @@ export function BacktestRunner() {
   return (
     <div className="grid gap-6 lg:grid-cols-[420px_1fr]">
       <div className="space-y-4">
-        <Card>
-          <CardHeader>
+        <Card className="terminal-card">
+          <CardHeader className="space-y-1">
+            <span className="eyebrow">Step 1</span>
             <CardTitle>Portfolio</CardTitle>
           </CardHeader>
           <CardContent>
@@ -165,8 +166,9 @@ export function BacktestRunner() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
+        <Card className="terminal-card">
+          <CardHeader className="space-y-1">
+            <span className="eyebrow">Step 2</span>
             <CardTitle>Parameters</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -252,21 +254,26 @@ export function BacktestRunner() {
 
       <div className="min-w-0 space-y-4">
         {!result ? (
-          <Card className="flex h-full min-h-[400px] items-center justify-center bg-grid">
+          <Card className="terminal-card flex h-full min-h-[420px] items-center justify-center bg-grid">
             <div className="text-center">
-              <p className="text-lg font-semibold">Build a portfolio, click Run</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Results appear here. Hypothetical, based on adjusted-close prices.
+              <p className="eyebrow">Awaiting input</p>
+              <p className="mt-3 text-lg font-semibold tracking-tight">Build a portfolio, click Run.</p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Results render here. Hypothetical, based on adjusted-close prices.
               </p>
             </div>
           </Card>
         ) : (
           <>
-            <Card>
+            <MetricsGrid m={result.metrics} />
+
+            <Card className="terminal-card">
               <CardHeader className="flex-row items-center justify-between space-y-0">
                 <div>
                   <CardTitle>Equity curve</CardTitle>
-                  <p className="text-xs text-muted-foreground mt-1">Hypothetical results. Past performance does not predict future returns.</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Hypothetical · Past performance does not predict future returns.
+                  </p>
                 </div>
                 <Dialog open={saveOpen} onOpenChange={setSaveOpen}>
                   <DialogTrigger asChild>
@@ -303,9 +310,7 @@ export function BacktestRunner() {
               </CardContent>
             </Card>
 
-            <MetricsGrid m={result.metrics} />
-
-            <Card>
+            <Card className="terminal-card">
               <CardHeader>
                 <CardTitle className="text-base">Drawdown</CardTitle>
                 <p className="text-xs text-muted-foreground">Peak-to-trough decline over time.</p>

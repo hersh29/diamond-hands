@@ -32,35 +32,36 @@ export default async function ExplorePage() {
   const scenarios = (data ?? []) as ScenarioRow[];
 
   return (
-    <div className="container py-8 md:py-12">
-      <div className="flex items-end justify-between">
+    <div className="container py-10">
+      <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">Explore</h1>
-          <p className="mt-2 text-muted-foreground">Public scenarios shared by other users.</p>
+          <p className="eyebrow">Public · community shared</p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight md:text-4xl">Explore</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Public scenarios shared by other users.</p>
         </div>
         <Button asChild><Link href="/backtest">New backtest</Link></Button>
       </div>
 
       {scenarios.length === 0 ? (
-        <Card className="mt-8">
+        <Card className="terminal-card mt-8 bg-grid">
           <CardContent className="flex flex-col items-center justify-center py-20 text-center">
             <p className="text-muted-foreground">No public scenarios yet. Be the first.</p>
             <Button asChild className="mt-4"><Link href="/backtest">Run a backtest</Link></Button>
           </CardContent>
         </Card>
       ) : (
-        <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {scenarios.map((s) => {
             const m = s.results?.metrics;
             const positive = (m?.totalReturn ?? 0) >= 0;
             return (
               <Link key={s.id} href={`/s/${s.share_slug}`}>
-                <Card className="h-full transition-colors hover:border-primary">
-                  <CardHeader>
-                    <CardTitle className="text-base line-clamp-2">{s.name}</CardTitle>
-                    <CardDescription className="flex flex-wrap gap-1">
+                <Card className="terminal-card h-full transition-colors hover:border-primary/50">
+                  <CardHeader className="space-y-1">
+                    <CardTitle className="line-clamp-2 text-base">{s.name}</CardTitle>
+                    <CardDescription className="flex flex-wrap gap-x-2 gap-y-0.5">
                       {s.params.assets.slice(0, 4).map((a) => (
-                        <span key={a.symbol} className="font-mono text-xs">
+                        <span key={a.symbol} className="font-mono text-[11px]">
                           {Math.round(a.weight * 100)}% {displaySymbol(a.symbol)}
                         </span>
                       ))}
@@ -69,10 +70,10 @@ export default async function ExplorePage() {
                   <CardContent className="flex items-baseline justify-between">
                     {m ? (
                       <>
-                        <span className={`text-xl font-semibold tabular ${positive ? "text-profit" : "text-loss"}`}>
+                        <span className={`display-num text-xl ${positive ? "text-profit" : "text-loss"}`}>
                           {positive ? "+" : ""}{formatPercent(m.totalReturn * 100)}
                         </span>
-                        <span className="text-xs text-muted-foreground">
+                        <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                           {formatPercent(m.cagr * 100)} CAGR
                         </span>
                       </>

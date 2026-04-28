@@ -4,7 +4,6 @@
 
 @layer base {
   :root {
-    /* Light mode kept minimal — we ship dark-by-default. */
     --background: 220 30% 98%;
     --foreground: 220 25% 12%;
 
@@ -13,7 +12,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 25% 12%;
 
-    --primary: 173 80% 64%;            /* #5EEAD4 — ice mint */
+    --primary: 173 80% 64%;
     --primary-foreground: 220 30% 10%;
 
     --secondary: 220 20% 92%;
@@ -35,27 +34,27 @@
     --profit: 158 64% 52%;
     --loss:   0 72% 65%;
 
-    --radius: 0.625rem;
+    --radius: 0.375rem;        /* sharper — was 0.625rem */
   }
 
   .dark {
-    /* Deep midnight bg, ice-mint accent. */
-    --background: 222 38% 7%;          /* #0A0E1A */
-    --foreground: 210 30% 96%;         /* #F1F5F9 */
+    /* Deep midnight, slightly cooler. */
+    --background: 220 38% 6%;             /* near-black blue-tinted */
+    --foreground: 210 30% 96%;
 
-    --card: 220 30% 11%;                /* #121826 */
+    --card: 220 28% 9%;                    /* card slightly lifted from bg */
     --card-foreground: 210 30% 96%;
-    --popover: 220 30% 11%;
+    --popover: 220 28% 10%;
     --popover-foreground: 210 30% 96%;
 
-    --primary: 173 80% 64%;             /* #5EEAD4 */
-    --primary-foreground: 220 38% 9%;
+    --primary: 173 80% 64%;                /* #5EEAD4 — ice mint */
+    --primary-foreground: 220 38% 8%;
 
-    --secondary: 220 20% 17%;
+    --secondary: 220 22% 14%;
     --secondary-foreground: 210 30% 96%;
 
-    --muted: 220 20% 15%;
-    --muted-foreground: 220 12% 60%;
+    --muted: 220 22% 12%;
+    --muted-foreground: 220 12% 56%;
 
     --accent: 173 40% 22%;
     --accent-foreground: 173 70% 75%;
@@ -63,12 +62,12 @@
     --destructive: 0 70% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 18% 18%;              /* #1F2937-ish */
-    --input:  220 18% 18%;
+    --border: 220 18% 16%;
+    --input:  220 18% 16%;
     --ring:   173 80% 64%;
 
-    --profit: 158 64% 52%;              /* #34D399 */
-    --loss:   0 75% 70%;                /* #F87171 */
+    --profit: 158 64% 52%;                  /* #34D399 */
+    --loss:   0 75% 70%;                    /* #F87171 */
   }
 }
 
@@ -86,20 +85,45 @@
   /* Tabular numbers for prices/metrics */
   .tabular {
     font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
   }
 }
 
-/* Brand-specific subtle radial backdrop for hero sections */
 @layer utilities {
+  /* Subtle radial backdrop for hero / empty-state surfaces */
   .bg-grid {
     background-image:
-      radial-gradient(circle at 25% 30%, hsl(var(--primary) / 0.10), transparent 40%),
-      radial-gradient(circle at 75% 70%, hsl(var(--primary) / 0.05), transparent 50%);
+      radial-gradient(circle at 22% 24%, hsl(var(--primary) / 0.10), transparent 38%),
+      radial-gradient(circle at 78% 76%, hsl(var(--primary) / 0.05), transparent 50%);
   }
+
+  /* Fine grid lines à la trading terminal */
+  .bg-grid-lines {
+    background-image:
+      linear-gradient(hsl(var(--border) / 0.18) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.18) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  /* Section eyebrow labels — small caps + tracking */
+  .eyebrow {
+    @apply font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground;
+  }
+
+  /* Big tabular display numbers */
+  .display-num {
+    @apply font-semibold tabular tracking-tight;
+  }
+
   .text-gradient {
     background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(210 90% 70%) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+  }
+
+  /* Sharper card edge style for dense data */
+  .terminal-card {
+    @apply rounded-md border border-border/80 bg-card;
   }
 }

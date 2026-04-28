@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Wallet } from "lucide-react";
+import { Plus, Wallet, ArrowUpRight } from "lucide-react";
 
 export const metadata = { title: "Paper portfolios" };
 
@@ -21,10 +21,11 @@ export default async function PaperListPage() {
 
   return (
     <div className="container py-10">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Paper portfolios</h1>
-          <p className="text-muted-foreground">
+          <p className="eyebrow">Paper trade · simulation</p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight md:text-4xl">Paper portfolios</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             Simulate trades with virtual cash. No real money involved.
           </p>
         </div>
@@ -34,7 +35,7 @@ export default async function PaperListPage() {
       </div>
 
       {!portfolios || portfolios.length === 0 ? (
-        <Card className="mt-8">
+        <Card className="terminal-card mt-8 bg-grid">
           <CardContent className="flex flex-col items-center justify-center py-20 text-center">
             <Wallet className="h-10 w-10 text-muted-foreground" />
             <p className="mt-4 max-w-sm text-muted-foreground">
@@ -50,9 +51,12 @@ export default async function PaperListPage() {
         <div className="mt-8 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {portfolios.map((p) => (
             <Link key={p.id} href={`/paper/${p.id}`}>
-              <Card className="h-full transition-colors hover:border-primary">
-                <CardHeader>
-                  <CardTitle className="text-base">{p.name}</CardTitle>
+              <Card className="terminal-card h-full transition-colors hover:border-primary/50">
+                <CardHeader className="space-y-1">
+                  <CardTitle className="flex items-start justify-between text-base">
+                    <span>{p.name}</span>
+                    <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  </CardTitle>
                   <CardDescription>
                     Created {new Date(p.created_at).toLocaleDateString()}
                   </CardDescription>

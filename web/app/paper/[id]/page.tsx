@@ -1,7 +1,9 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Kpi, KpiBar, KpiCell } from "@/components/kpi";
 import { HoldingsTable } from "@/components/paper/holdings-table";
 import { TransactionsList } from "@/components/paper/transactions-list";
 import { NavChart } from "@/components/paper/nav-chart";
@@ -34,7 +36,6 @@ export default async function PaperDetailPage(
     notFound();
   }
 
-  // Pull all transactions
   const { data: txnsRaw } = await supabase
     .from("transactions")
     .select("id, type, asset_id, shares, price, cash_amount, fees, executed_at, notes")
@@ -44,7 +45,6 @@ export default async function PaperDetailPage(
   const txnRows = txnsRaw ?? [];
   const assetIds = Array.from(new Set(txnRows.map((t) => t.asset_id).filter((x): x is number => x != null)));
 
-  // Pull asset metadata + latest prices in parallel
   const [{ data: assets }, latestPrices] = await Promise.all([
     assetIds.length > 0
       ? supabase
@@ -68,7 +68,6 @@ export default async function PaperDetailPage(
     txnRows.filter((t) => t.asset_id != null).map((t) => [t.id, t.asset_id as number]),
   );
 
-  // Derive holdings + cash
   const transactions: PaperTransaction[] = txnRows.map((t) => ({
     id: t.id,
     type: t.type,
@@ -85,7 +84,6 @@ export default async function PaperDetailPage(
   const holdings = buildHoldings(positions, assetMetaList);
   const summary  = summarize(cashBalance, holdings, totalContributed);
 
-  // Build NAV series for the chart
   const earliestDate = transactions.length > 0
     ? transactions[0].executed_at.slice(0, 10)
     : portfolio.created_at.slice(0, 10);
@@ -116,37 +114,65 @@ export default async function PaperDetailPage(
     <div className="container py-8 md:py-10">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <Link href="/paper" className="text-xs text-muted-foreground hover:text-foreground">
-            ← Paper portfolios
+          <Link
+            href="/paper"
+            className="inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeft className="h-3 w-3" /> Paper portfolios
           </Link>
-          <h1 className="mt-1 text-3xl font-semibold tracking-tight">{portfolio.name}</h1>
-          <p className="text-sm text-muted-foreground">
-            Hypothetical only · Created {new Date(portfolio.created_at).toLocaleDateString()}
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight md:text-4xl">{portfolio.name}</h1>
+          <p className="mt-1 font-mono text-[11px] uppercase tracking-wider text-muted-foreground/80">
+            Hypothetical · Created {new Date(portfolio.created_at).toLocaleDateString()}
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <ImportButton portfolioId={id} />
           <DeletePortfolioButton portfolioId={id} portfolioName={portfolio.name} />
         </div>
       </div>
 
-      <div className="mt-6 grid gap-3 md:grid-cols-4">
-        <SummaryCard label="Total value"  value={formatCurrency(summary.totalValue)} />
-        <SummaryCard label="Market value" value={formatCurrency(summary.marketValue)} muted />
-        <SummaryCard label="Cash"         value={formatCurrency(summary.cashBalance)}   muted />
-        <SummaryCard
-          label="Total return"
-          value={`${positive ? "+" : ""}${formatCurrency(summary.totalReturn)} (${positive ? "+" : ""}${formatPercent(summary.totalReturnPct)})`}
-          className={positive ? "text-profit" : "text-loss"}
-        />
+      <div className="mt-6">
+        <KpiBar>
+          <KpiCell>
+            <Kpi
+              label="Total value"
+              value={formatCurrency(summary.totalValue)}
+              size="xl"
+            />
+          </KpiCell>
+          <KpiCell>
+            <Kpi
+              label="Total return"
+              value={`${positive ? "+" : ""}${formatCurrency(summary.totalReturn)}`}
+              delta={`${positive ? "+" : ""}${formatPercent(summary.totalReturnPct)}`}
+              deltaTone={positive ? "profit" : "loss"}
+              size="lg"
+              className={positive ? "text-profit" : "text-loss"}
+            />
+          </KpiCell>
+          <KpiCell>
+            <Kpi label="Cash" value={formatCurrency(summary.cashBalance)} size="lg" />
+          </KpiCell>
+          <KpiCell>
+            <Kpi
+              label="Positions"
+              value={String(holdings.length)}
+              size="lg"
+              hint={`${formatCurrency(summary.marketValue)} market value`}
+            />
+          </KpiCell>
+        </KpiBar>
       </div>
 
       {navSeries.length > 1 && (
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle>Performance</CardTitle>
+        <Card className="terminal-card mt-6">
+          <CardHeader className="space-y-1">
+            <div className="flex items-baseline justify-between">
+              <CardTitle>Performance</CardTitle>
+              <span className="eyebrow">vs {BENCHMARK}</span>
+            </div>
             <p className="text-xs text-muted-foreground">
-              Daily NAV vs SPY (assuming the same cash flow had been deposited into SPY).
+              Daily NAV against a benchmark allocated with the same cash flow.
             </p>
           </CardHeader>
           <CardContent>
@@ -161,13 +187,11 @@ export default async function PaperDetailPage(
           cashBalance={summary.cashBalance}
           holdings={holdings}
         />
-        <TransactionsList
-          transactions={[...transactions].reverse()}
-        />
+        <TransactionsList transactions={[...transactions].reverse()} />
       </div>
 
-      <div className="mt-10 rounded-md border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
-        Hypothetical results. Past performance does not predict future returns. Not investment advice.
+      <div className="mt-10 rounded-md border border-dashed border-border/60 p-3 text-center font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+        Hypothetical · Past performance does not predict future results · Not investment advice
       </div>
     </div>
   );
@@ -178,8 +202,6 @@ async function fetchLatestPrices(
   assetIds: number[],
 ): Promise<Map<number, number>> {
   if (assetIds.length === 0) return new Map();
-  // For each asset, pull its most recent adj_close.
-  // Single-query approach: fetch a window and pick max-date per asset client-side.
   const since = new Date();
   since.setDate(since.getDate() - 14);
   const sinceISO = since.toISOString().slice(0, 10);
@@ -199,17 +221,3 @@ async function fetchLatestPrices(
   }
   return latest;
 }
-
-function SummaryCard({
-  label, value, muted, className,
-}: { label: string; value: string; muted?: boolean; className?: string }) {
-  return (
-    <Card className="p-4">
-      <div className="text-xs text-muted-foreground">{label}</div>
-      <div className={`mt-1 text-xl font-semibold tabular ${muted ? "text-muted-foreground" : ""} ${className ?? ""}`}>
-        {value}
-      </div>
-    </Card>
-  );
-}
-

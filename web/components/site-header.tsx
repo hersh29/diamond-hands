@@ -1,8 +1,14 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
-import { DiamondHandsWordmark } from "@/components/diamond-mark";
+import { DiamondMark } from "@/components/diamond-mark";
 import { UserMenu } from "@/components/user-menu";
+
+const navLinks = [
+  { href: "/backtest", label: "Backtest" },
+  { href: "/paper",    label: "Paper trade" },
+  { href: "/explore",  label: "Explore" },
+];
 
 export async function SiteHeader() {
   const supabase = await createClient();
@@ -11,37 +17,26 @@ export async function SiteHeader() {
   } = await supabase.auth.getUser();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/65">
-      <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="text-foreground hover:text-primary transition-colors">
-          <DiamondHandsWordmark />
+    <header className="sticky top-0 z-40 border-b border-border/50 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/65">
+      <div className="container flex h-14 items-center justify-between">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-foreground transition-colors hover:text-primary"
+        >
+          <DiamondMark size={20} />
+          <span className="font-semibold tracking-tight">diamondhands</span>
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">
-          <Link
-            href="/backtest"
-            className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Backtest
-          </Link>
-          <Link
-            href="/paper"
-            className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Paper trade
-          </Link>
-          <Link
-            href="/explore"
-            className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Explore
-          </Link>
-          <Link
-            href="/legal/disclaimer"
-            className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            Disclaimer
-          </Link>
+        <nav className="hidden items-center md:flex">
+          {navLinks.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            >
+              {l.label}
+            </Link>
+          ))}
         </nav>
 
         <div className="flex items-center gap-2">

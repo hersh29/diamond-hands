@@ -1,5 +1,4 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
-import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
 type CookieToSet = { name: string; value: string; options?: CookieOptions };
@@ -21,23 +20,11 @@ export async function createClient() {
               cookieStore.set(name, value, options);
             });
           } catch {
-            // Server Components cannot set cookies — safe to ignore;
-            // middleware handles session refresh.
+            // Server Components cannot set cookies — safe to ignore.
+            // The session cookie is refreshed by the OAuth callback route.
           }
         },
       },
     },
-  );
-}
-
-/**
- * Service-role client for server-only routes that need to bypass RLS.
- * NEVER expose to the browser.
- */
-export function createServiceClient() {
-  return createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { persistSession: false } },
   );
 }
