@@ -10,16 +10,16 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import type { EquityPoint } from "@/lib/backtest/types";
 import { formatCurrency } from "@/lib/utils";
+import type { NavPoint } from "@/lib/paper/nav";
 
 interface Props {
-  data: EquityPoint[];
-  height?: number;
+  data: NavPoint[];
   benchmarkLabel?: string;
+  height?: number;
 }
 
-export function EquityCurveChart({ data, height = 360, benchmarkLabel }: Props) {
+export function NavChart({ data, benchmarkLabel, height = 320 }: Props) {
   const step = Math.max(1, Math.floor(data.length / 500));
   const sampled = data.filter((_, i) => i % step === 0 || i === data.length - 1);
   const hasBenchmark = sampled.some((d) => d.benchmark != null);
@@ -29,9 +29,9 @@ export function EquityCurveChart({ data, height = 360, benchmarkLabel }: Props) 
       <ResponsiveContainer>
         <AreaChart data={sampled} margin={{ top: 10, right: 8, bottom: 0, left: 8 }}>
           <defs>
-            <linearGradient id="dh-fill" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id="dh-nav-fill" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%"   stopColor="hsl(var(--primary))" stopOpacity={0.4} />
-              <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0}   />
+              <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
@@ -66,7 +66,7 @@ export function EquityCurveChart({ data, height = 360, benchmarkLabel }: Props) 
             name="Portfolio"
             stroke="hsl(var(--primary))"
             strokeWidth={2}
-            fill="url(#dh-fill)"
+            fill="url(#dh-nav-fill)"
             dot={false}
           />
           {hasBenchmark && (
@@ -82,7 +82,7 @@ export function EquityCurveChart({ data, height = 360, benchmarkLabel }: Props) 
           <Line
             type="monotone"
             dataKey="contributed"
-            name="Contributions"
+            name="Net deposits"
             stroke="hsl(var(--muted-foreground))"
             strokeWidth={1.5}
             strokeDasharray="4 4"

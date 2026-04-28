@@ -32,6 +32,8 @@ export interface BacktestParams {
   rebalance?: RebalanceFrequency;
   /** Risk-free rate (annual) used for Sharpe ratio. Default 4%. */
   riskFreeRate?: number;
+  /** Optional benchmark symbol (e.g. "SPY") to compare against. */
+  benchmark?: string;
 }
 
 /**
@@ -49,6 +51,8 @@ export interface EquityPoint {
   value: number;
   /** Cumulative cash contributed so far (initial + all DCA). */
   contributed: number;
+  /** Hypothetical value if same cash flow had bought benchmark instead. Only present if benchmark requested. */
+  benchmark?: number;
 }
 
 export interface DrawdownPoint {
@@ -78,6 +82,10 @@ export interface BacktestMetrics {
   bestYear: { year: number; return: number } | null;
   /** Calendar year with the worst return. */
   worstYear: { year: number; return: number } | null;
+  /** Benchmark final value (using same cash flow). Only present if benchmark requested. */
+  benchmarkFinalValue?: number;
+  /** Benchmark CAGR. */
+  benchmarkCagr?: number;
 }
 
 export interface BacktestResult {

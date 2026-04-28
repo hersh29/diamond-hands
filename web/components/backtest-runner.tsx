@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { PortfolioBuilder, type BuilderAsset } from "@/components/portfolio-builder";
 import { EquityCurveChart } from "@/components/equity-curve-chart";
+import { DrawdownChart } from "@/components/drawdown-chart";
 import { MetricsGrid } from "@/components/metrics-grid";
 import { runBacktest } from "@/lib/backtest/engine";
 import { fetchPriceMatrix } from "@/lib/backtest/fetch-prices";
@@ -47,6 +48,8 @@ const DEFAULT_PORTFOLIO: BuilderAsset[] = [
   { symbol: "BND", name: "Vanguard Total Bond Market", weight: 40 },
 ];
 
+const BENCHMARK_SYMBOL = "SPY";
+
 export function BacktestRunner() {
   const router = useRouter();
   const [assets, setAssets] = useState<BuilderAsset[]>(DEFAULT_PORTFOLIO);
@@ -56,6 +59,7 @@ export function BacktestRunner() {
   const [contributionAmount, setContributionAmount] = useState("0");
   const [contributionFreq, setContributionFreq] = useState<ContributionFrequency>("monthly");
   const [rebalance, setRebalance] = useState<RebalanceFrequency>("annually");
+  const [compareBenchmark, setCompareBenchmark] = useState(true);
 
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<BacktestResult | null>(null);
@@ -77,8 +81,15 @@ export function BacktestRunner() {
     setResult(null);
     try {
       const supabase = createClient();
+      const wantBenchmark = compareBenchmark
+        && !assets.some((a) => a.symbol === BENCHMARK_SYMBOL);
+      const symbols = [...new Set([
+        ...assets.map((a) => a.symbol),
+        ...(wantBenchmark ? [BENCHMARK_SYMBOL] : []),
+      ])];
+
       const matrix = await fetchPriceMatrix(supabase, {
-        symbols: assets.map((a) => a.symbol),
+        symbols,
         startDate,
         endDate,
       });
@@ -102,6 +113,7 @@ export function BacktestRunner() {
         initialAmount: Number(initialAmount),
         contribution: contrib,
         rebalance,
+        ...(wantBenchmark ? { benchmark: BENCHMARK_SYMBOL } : {}),
       };
 
       const r = runBacktest(p, matrix);
@@ -221,6 +233,16 @@ export function BacktestRunner() {
               </Select>
             </div>
 
+            <label className="flex items-center gap-2 text-sm cursor-pointer select-none">
+              <input
+                type="checkbox"
+                className="h-4 w-4 rounded border-border bg-background accent-primary"
+                checked={compareBenchmark}
+                onChange={(e) => setCompareBenchmark(e.target.checked)}
+              />
+              <span>Compare against SPY (S&amp;P 500)</span>
+            </label>
+
             <Button className="w-full" size="lg" disabled={!canRun || running} onClick={handleRun}>
               {running ? "Running…" : "Run backtest"}
             </Button>
@@ -274,11 +296,24 @@ export function BacktestRunner() {
                 </Dialog>
               </CardHeader>
               <CardContent>
-                <EquityCurveChart data={result.equityCurve} />
+                <EquityCurveChart
+                  data={result.equityCurve}
+                  benchmarkLabel={params?.benchmark ? "SPY" : undefined}
+                />
               </CardContent>
             </Card>
 
             <MetricsGrid m={result.metrics} />
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">Drawdown</CardTitle>
+                <p className="text-xs text-muted-foreground">Peak-to-trough decline over time.</p>
+              </CardHeader>
+              <CardContent>
+                <DrawdownChart data={result.drawdown} />
+              </CardContent>
+            </Card>
           </>
         )}
       </div>

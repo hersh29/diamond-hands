@@ -25,6 +25,12 @@ export async function SiteHeader() {
             Backtest
           </Link>
           <Link
+            href="/paper"
+            className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            Paper trade
+          </Link>
+          <Link
             href="/explore"
             className="rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
           >

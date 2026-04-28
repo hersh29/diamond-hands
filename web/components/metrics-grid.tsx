@@ -5,21 +5,43 @@ import { formatCurrency, formatPercent } from "@/lib/utils";
 export function MetricsGrid({ m }: { m: BacktestMetrics }) {
   const profit = m.finalValue - m.totalContributed;
   const profitClass = profit >= 0 ? "text-profit" : "text-loss";
+  const benchmarkDelta =
+    m.benchmarkFinalValue != null
+      ? m.finalValue - m.benchmarkFinalValue
+      : null;
+  const beatsBenchmark = benchmarkDelta != null && benchmarkDelta > 0;
 
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      <Metric label="Final value"   value={formatCurrency(m.finalValue)}                                 />
-      <Metric label="Total contributed" value={formatCurrency(m.totalContributed)}                       muted />
-      <Metric label="Profit / loss" value={`${profit >= 0 ? "+" : ""}${formatCurrency(profit)}`}         className={profitClass} />
+      <Metric label="Final value"   value={formatCurrency(m.finalValue)} />
+      <Metric label="Total contributed" value={formatCurrency(m.totalContributed)} muted />
+      <Metric label="Profit / loss" value={`${profit >= 0 ? "+" : ""}${formatCurrency(profit)}`} className={profitClass} />
       <Metric label="Total return"  value={`${m.totalReturn >= 0 ? "+" : ""}${formatPercent(m.totalReturn * 100)}`} className={profitClass} />
 
-      <Metric label="CAGR"          value={formatPercent(m.cagr * 100)}                                  />
-      <Metric label="Volatility"    value={formatPercent(m.volatility * 100)}                            muted />
-      <Metric label="Sharpe ratio"  value={m.sharpe.toFixed(2)}                                          muted />
-      <Metric label="Max drawdown"  value={formatPercent(m.maxDrawdown * 100)}                           className="text-loss" />
+      <Metric label="CAGR"          value={formatPercent(m.cagr * 100)} />
+      <Metric label="Volatility"    value={formatPercent(m.volatility * 100)} muted />
+      <Metric label="Sharpe ratio"  value={m.sharpe.toFixed(2)} muted />
+      <Metric label="Max drawdown"  value={formatPercent(m.maxDrawdown * 100)} className="text-loss" />
 
-      {m.bestYear && <Metric label={`Best year (${m.bestYear.year})`}   value={formatPercent(m.bestYear.return * 100)}  className="text-profit" />}
+      {m.bestYear  && <Metric label={`Best year (${m.bestYear.year})`}   value={formatPercent(m.bestYear.return * 100)}  className="text-profit" />}
       {m.worstYear && <Metric label={`Worst year (${m.worstYear.year})`} value={formatPercent(m.worstYear.return * 100)} className="text-loss"  />}
+
+      {m.benchmarkFinalValue != null && (
+        <>
+          <Metric
+            label="vs SPY"
+            value={`${beatsBenchmark ? "+" : ""}${formatCurrency(benchmarkDelta!)}`}
+            className={beatsBenchmark ? "text-profit" : "text-loss"}
+          />
+          {m.benchmarkCagr != null && (
+            <Metric
+              label="SPY CAGR"
+              value={formatPercent(m.benchmarkCagr * 100)}
+              muted
+            />
+          )}
+        </>
+      )}
     </div>
   );
 }

@@ -12,10 +12,9 @@
  *      - On rebalance dates, liquidate and re-allocate to target weights
  *  3. Compute metrics from the final curve.
  *
- * Cash held inside the portfolio is implicitly zero between contribution events
- * because we always immediately invest. This is a deliberate simplification for
- * the lump-sum + DCA model. Real-world cash drag, fees, and tax effects are
- * out of scope.
+ * If `params.benchmark` is set, the engine simultaneously simulates an
+ * identical-cash-flow allocation into the benchmark symbol so the user can
+ * compare strategies that received the same money on the same days.
  */
 
 import type {
@@ -44,15 +43,21 @@ export function runBacktest(
     return emptyResult(echoParams);
   }
 
-  // Validate every asset has prices in the matrix
   for (const a of normalized) {
     if (!prices[a.symbol]) {
       throw new Error(`No price series for ${a.symbol}`);
     }
   }
 
+  const benchmarkSymbol = params.benchmark;
+  const hasBenchmark =
+    benchmarkSymbol !== undefined &&
+    prices[benchmarkSymbol] !== undefined &&
+    !normalized.some((a) => a.symbol === benchmarkSymbol);
+
   const targetWeights = new Map(normalized.map((a) => [a.symbol, a.weight]));
   const shares = new Map<string, number>(normalized.map((a) => [a.symbol, 0]));
+  let benchmarkShares = 0;
 
   // t=0 allocation
   const startPrices = priceVector(prices, normalized, 0);
@@ -60,11 +65,14 @@ export function runBacktest(
     const cash = params.initialAmount * a.weight;
     shares.set(a.symbol, cash / startPrices[a.symbol]);
   }
+  if (hasBenchmark) {
+    const bp = priceAt(prices[benchmarkSymbol!], 0);
+    benchmarkShares = params.initialAmount / bp;
+  }
 
   let totalContributed = params.initialAmount;
   const equityCurve: EquityPoint[] = [];
 
-  // Cache contribution / rebalance flags by index for the date list
   const contribFlags = computeContributionFlags(dates, params.contribution?.frequency);
   const rebalanceFlags = computeRebalanceFlags(dates, params.rebalance ?? "never");
 
@@ -72,13 +80,17 @@ export function runBacktest(
     const date = dates[i];
     const pv = priceVector(prices, normalized, i);
 
-    // 1) Apply contribution at start of day (if any), at today's open-equivalent prices
+    // 1) Apply contribution at start of day (if any)
     if (i > 0 && contribFlags[i] && params.contribution) {
       const cash = params.contribution.amount;
       totalContributed += cash;
       for (const a of normalized) {
         const buy = cash * a.weight;
         shares.set(a.symbol, (shares.get(a.symbol) ?? 0) + buy / pv[a.symbol]);
+      }
+      if (hasBenchmark) {
+        const bp = priceAt(prices[benchmarkSymbol!], i);
+        benchmarkShares += cash / bp;
       }
     }
 
@@ -88,7 +100,7 @@ export function runBacktest(
       value += (shares.get(a.symbol) ?? 0) * pv[a.symbol];
     }
 
-    // 3) Rebalance at end of day if scheduled (and not the very first day)
+    // 3) Rebalance at end of day if scheduled
     if (i > 0 && rebalanceFlags[i]) {
       for (const a of normalized) {
         const target = value * (targetWeights.get(a.symbol) ?? 0);
@@ -96,7 +108,11 @@ export function runBacktest(
       }
     }
 
-    equityCurve.push({ date, value, contributed: totalContributed });
+    const point: EquityPoint = { date, value, contributed: totalContributed };
+    if (hasBenchmark) {
+      point.benchmark = benchmarkShares * priceAt(prices[benchmarkSymbol!], i);
+    }
+    equityCurve.push(point);
   }
 
   const drawdown = computeDrawdown(equityCurve);
@@ -105,6 +121,7 @@ export function runBacktest(
     drawdown,
     params.initialAmount,
     params.riskFreeRate ?? 0.04,
+    hasBenchmark,
   );
 
   return { equityCurve, drawdown, metrics, echoParams };
@@ -129,19 +146,18 @@ function priceVector(
 ): Record<string, number> {
   const out: Record<string, number> = {};
   for (const a of assets) {
-    const series = prices[a.symbol];
-    const p = series[index];
-    if (!Number.isFinite(p) || p <= 0) {
-      // Forward-fill from earlier non-zero price. Forward-fill is the responsibility
-      // of the caller (alignPriceMatrix), but defend against bad data.
-      let j = index - 1;
-      while (j >= 0 && (!Number.isFinite(series[j]) || series[j] <= 0)) j--;
-      out[a.symbol] = j >= 0 ? series[j] : 1;
-    } else {
-      out[a.symbol] = p;
-    }
+    out[a.symbol] = priceAt(prices[a.symbol], index);
   }
   return out;
+}
+
+function priceAt(series: number[], index: number): number {
+  const p = series[index];
+  if (Number.isFinite(p) && p > 0) return p;
+  // Forward-fill from earlier non-zero price
+  let j = index - 1;
+  while (j >= 0 && (!Number.isFinite(series[j]) || series[j] <= 0)) j--;
+  return j >= 0 ? series[j] : 1;
 }
 
 function computeContributionFlags(
@@ -186,7 +202,6 @@ function bucketKey(iso: string, freq: ContributionFrequency): string {
     return `${d.getUTCFullYear()}-${d.getUTCMonth() + 1}`;
   }
   if (freq === "biweekly") {
-    // Week of year, two-week bucket
     const start = Date.UTC(d.getUTCFullYear(), 0, 1);
     const dayOfYear = Math.floor((d.getTime() - start) / 86_400_000);
     const week = Math.floor(dayOfYear / 7);
@@ -224,6 +239,7 @@ function computeMetrics(
   drawdown: DrawdownPoint[],
   initialAmount: number,
   riskFreeRate: number,
+  hasBenchmark: boolean,
 ): BacktestMetrics {
   if (curve.length === 0) {
     return {
@@ -240,7 +256,6 @@ function computeMetrics(
     };
   }
 
-  const first = curve[0];
   const last  = curve[curve.length - 1];
   const totalContributed = last.contributed;
   const finalValue = last.value;
@@ -248,12 +263,6 @@ function computeMetrics(
     ? (finalValue - totalContributed) / totalContributed
     : 0;
 
-  const years = yearsBetween(first.date, last.date);
-
-  // CAGR is computed on growth-only basis. With contributions, "CAGR" is ambiguous —
-  // we use a money-weighted approximation: solve for r where finalValue ≈ Σ contributions × (1+r)^t.
-  // For simplicity here we use the time-weighted compounded daily-return growth instead,
-  // which ignores the timing of contributions.
   const cagr = computeCagr(curve);
   const volatility = computeVolatility(curve);
   const sharpe = volatility > 0 ? (cagr - riskFreeRate) / volatility : 0;
@@ -269,7 +278,7 @@ function computeMetrics(
     null,
   );
 
-  return {
+  const metrics: BacktestMetrics = {
     initialAmount,
     totalContributed,
     finalValue,
@@ -281,19 +290,23 @@ function computeMetrics(
     bestYear,
     worstYear,
   };
+
+  if (hasBenchmark && last.benchmark != null) {
+    metrics.benchmarkFinalValue = last.benchmark;
+    metrics.benchmarkCagr = computeBenchmarkCagr(curve);
+  }
+
+  return metrics;
 }
 
 function computeCagr(curve: EquityPoint[]): number {
-  // Time-weighted return derived from daily returns of value/contributed-adjusted balance.
-  // We compute (V_t - cashflow_t) / V_{t-1} per day to neutralize contribution effects.
   let logSum = 0;
   let count = 0;
   for (let i = 1; i < curve.length; i++) {
     const prev = curve[i - 1];
     const cur  = curve[i];
     const cashflow = cur.contributed - prev.contributed;
-    const denom = prev.value;
-    if (denom <= 0) continue;
+    if (prev.value <= 0) continue;
     const rawReturn = (cur.value - cashflow - prev.value) / prev.value;
     const factor = 1 + rawReturn;
     if (factor <= 0) continue;
@@ -303,6 +316,24 @@ function computeCagr(curve: EquityPoint[]): number {
   if (count === 0) return 0;
   const avgDaily = logSum / count;
   return Math.expm1(avgDaily * TRADING_DAYS_PER_YEAR);
+}
+
+function computeBenchmarkCagr(curve: EquityPoint[]): number {
+  let logSum = 0;
+  let count = 0;
+  for (let i = 1; i < curve.length; i++) {
+    const prev = curve[i - 1].benchmark;
+    const cur  = curve[i].benchmark;
+    const cashflow = curve[i].contributed - curve[i - 1].contributed;
+    if (prev == null || cur == null || prev <= 0) continue;
+    const rawReturn = (cur - cashflow - prev) / prev;
+    const factor = 1 + rawReturn;
+    if (factor <= 0) continue;
+    logSum += Math.log(factor);
+    count += 1;
+  }
+  if (count === 0) return 0;
+  return Math.expm1((logSum / count) * TRADING_DAYS_PER_YEAR);
 }
 
 function computeVolatility(curve: EquityPoint[]): number {
@@ -340,11 +371,6 @@ function computeYearlyReturns(curve: EquityPoint[]): { year: number; return: num
     });
   }
   return out.sort((a, b) => a.year - b.year);
-}
-
-function yearsBetween(startISO: string, endISO: string): number {
-  const ms = new Date(`${endISO}T00:00:00Z`).getTime() - new Date(`${startISO}T00:00:00Z`).getTime();
-  return ms / (365.25 * 86_400_000);
 }
 
 function emptyResult(echoParams: BacktestParams): BacktestResult {
@@ -387,11 +413,9 @@ export function alignPriceMatrix(
   }
   const dates = Array.from(dateSet).sort();
 
-  // Find first date where every asset has at least one price ≤ that date
-  const firstAvailable = (series: { date: string; price: number }[]) => series[0]?.date;
   const earliestUsable = assetSeries
-    .map((a) => firstAvailable(a.series))
-    .filter(Boolean)
+    .map((a) => a.series[0]?.date)
+    .filter((d): d is string => Boolean(d))
     .sort()
     .pop()!;
   const usableDates = dates.filter((d) => d >= earliestUsable);

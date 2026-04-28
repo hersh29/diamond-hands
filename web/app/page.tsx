@@ -13,7 +13,7 @@ export default function HomePage() {
             <div className="mx-auto max-w-3xl text-center">
               <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground">
                 <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                Backtester live · Paper trading next
+                Backtester + paper trading live · Free
               </div>
               <h1 className="text-4xl font-semibold tracking-tight md:text-6xl">
                 Backtest any portfolio.{" "}
@@ -50,7 +50,7 @@ export default function HomePage() {
           <Feature
             icon={<Wallet className="h-5 w-5" />}
             title="Paper trading"
-            body="Coming next: import positions from your broker, simulate trades, test strategies — all without real money."
+            body="Import positions from your broker via CSV, simulate buys and sells with virtual cash, and track performance vs SPY — all without risking real money."
           />
           <Feature
             icon={<Sparkles className="h-5 w-5" />}

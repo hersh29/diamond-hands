@@ -23,7 +23,8 @@ export function SiteFooter() {
             </h4>
             <ul className="mt-3 space-y-2 text-sm">
               <li><Link href="/backtest" className="hover:text-primary">Backtest</Link></li>
-              <li><Link href="/explore" className="hover:text-primary">Explore</Link></li>
+              <li><Link href="/paper"    className="hover:text-primary">Paper trade</Link></li>
+              <li><Link href="/explore"  className="hover:text-primary">Explore</Link></li>
             </ul>
           </div>
 

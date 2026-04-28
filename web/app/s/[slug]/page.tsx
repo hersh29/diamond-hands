@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EquityCurveChart } from "@/components/equity-curve-chart";
+import { DrawdownChart } from "@/components/drawdown-chart";
 import { MetricsGrid } from "@/components/metrics-grid";
 import { displaySymbol, formatPercent } from "@/lib/utils";
 import type { BacktestParams, BacktestResult } from "@/lib/backtest/types";
@@ -52,7 +53,7 @@ export default async function SharedScenarioPage(
   const sc = await loadScenario(slug);
   if (!sc) notFound();
 
-  // Best-effort view counter (RLS-safe RPC)
+  // Best-effort view counter
   const supabase = await createClient();
   await supabase.rpc("increment_scenario_view", { slug }).then(() => {}, () => {});
 
@@ -85,6 +86,7 @@ export default async function SharedScenarioPage(
             {p.startDate} → {p.endDate} · ${p.initialAmount.toLocaleString()} initial
             {p.contribution && ` · +$${p.contribution.amount.toLocaleString()}/${p.contribution.frequency}`}
             {p.rebalance && p.rebalance !== "never" && ` · rebalance ${p.rebalance}`}
+            {p.benchmark && ` · vs ${p.benchmark}`}
           </div>
         </CardContent>
       </Card>
@@ -97,10 +99,22 @@ export default async function SharedScenarioPage(
               <p className="text-xs text-muted-foreground">Hypothetical results. Past performance does not predict future returns.</p>
             </CardHeader>
             <CardContent>
-              <EquityCurveChart data={result.equityCurve} />
+              <EquityCurveChart
+                data={result.equityCurve}
+                benchmarkLabel={p.benchmark}
+              />
             </CardContent>
           </Card>
           <MetricsGrid m={result.metrics} />
+          <Card className="mt-4">
+            <CardHeader>
+              <CardTitle className="text-base">Drawdown</CardTitle>
+              <p className="text-xs text-muted-foreground">Peak-to-trough decline over time.</p>
+            </CardHeader>
+            <CardContent>
+              <DrawdownChart data={result.drawdown} />
+            </CardContent>
+          </Card>
         </>
       ) : (
         <Card className="p-12 text-center text-muted-foreground">
