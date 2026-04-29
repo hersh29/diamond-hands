@@ -8,10 +8,18 @@ import { DiamondMark } from "@/components/diamond-mark";
 export default async function HomePage(
   { searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> },
 ) {
-  // If Supabase redirects here with OAuth error params (when redirectTo isn't
-  // allowed it falls back to Site URL), forward to /login so the user sees
-  // a real error message instead of a confused landing page.
+  // Recover from misrouted OAuth callbacks. When the user-supplied `redirectTo`
+  // isn't allow-listed in Supabase's URL config, Supabase falls back to the
+  // Site URL (root) and appends the auth artifacts here. Forward to the real
+  // handlers so sign-in actually completes.
   const sp = await searchParams;
+
+  if (typeof sp.code === "string" && sp.code.length > 10) {
+    const params = new URLSearchParams({ code: sp.code });
+    if (typeof sp.next === "string") params.set("next", sp.next);
+    redirect(`/auth/callback?${params.toString()}`);
+  }
+
   if (sp.error || sp.error_code) {
     const params = new URLSearchParams();
     for (const [k, v] of Object.entries(sp)) {

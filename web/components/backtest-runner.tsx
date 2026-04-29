@@ -94,7 +94,12 @@ export function BacktestRunner() {
         endDate,
       });
       if (matrix.dates.length === 0) {
-        toast.error("No price data available for the selected range and assets.");
+        // Empty matrix usually means the daily price ingest hasn't run yet.
+        // Give the user something useful to do about it.
+        toast.error(
+          "No price data found. The daily ingest may not have populated prices yet — check the GitHub Actions tab.",
+          { duration: 8000 },
+        );
         return;
       }
 
