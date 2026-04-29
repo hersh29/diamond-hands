@@ -8,39 +8,43 @@ Constraint: solo dev, $5/mo recurring spend cap until paying users arrive. Stack
 
 ## Phases
 
-### Phase 0 — Foundation ✅ in progress
+### Phase 0 — Foundation ✅ shipped
 - Monorepo restructured (`web/`, `ingest/`, `supabase/`, `legacy/`, `plan/`)
 - Supabase schema, RLS, seed asset universe
 - Python ingest worker (yfinance → Supabase)
 - GitHub Actions: nightly cron + web CI
-- Next.js 15 scaffold on Vercel
+- Next.js 15 scaffold on Vercel, deployed at `diamondhands.space`
 - Auth: email + Google (Supabase)
 - Brand system: logo, colors, type, dark theme
 - Legal pages (disclaimer / terms / privacy)
 
-### Phase 1 — Backtester
+### Phase 1 — Backtester ✅ shipped
 - Asset search (top US stocks + ETFs + crypto)
 - Portfolio builder (multi-asset weights)
 - Lump sum + DCA backtest, client-side TS engine
 - Charts: equity curve, drawdown
 - Metrics: CAGR, volatility, Sharpe, max drawdown, total return, best/worst year
+- SPY benchmark overlay with contribution-aware comparison
 - Save scenario → public share URL → OG image
+- First-run disclaimer modal
 - Landing page with hero + sample scenarios
 
-### Phase 2 — Paper trading
-- CSV import (Robinhood, Fidelity, Schwab, Vanguard templates)
-- Manual position entry
-- Daily NAV tracking on saved portfolios
-- Buy/sell paper transactions with virtual cash
-- Performance vs benchmark (default SPY)
-- Dividend tracking where data is available
+### Phase 2 — Paper trading ✅ shipped
+- CSV import with auto-detect (Robinhood, Fidelity, Schwab, Vanguard, generic)
+- Manual buy / sell / cash flow entry via the trade dialog
+- Daily NAV tracking computed from transactions + price matrix
+- Performance vs SPY benchmark (same-cash-flow comparison)
+- Holdings table with avg-cost cost basis + per-row Buy/Sell quick actions
+- Transaction history
 
-### Phase 3 — Strategies & polish
+### Phase 3 — Strategies & polish (next)
 - Rule-based strategy builder (rebalance triggers, DCA schedules)
 - Monte Carlo retirement projection (bootstrapped historical returns)
 - Asset correlation matrix, efficient frontier
 - Email digests (Resend) — weekly performance summaries
 - Monthly returns heatmap
+- Dividend auto-tracking
+- Mobile-first UX pass
 
 ### Phase 4 — Monetization
 - Stripe integration

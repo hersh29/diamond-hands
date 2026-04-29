@@ -2,9 +2,10 @@ export const metadata = { title: "Privacy Policy" };
 
 export default function PrivacyPage() {
   return (
-    <article className="container max-w-3xl py-12 prose prose-invert prose-headings:tracking-tight">
-      <h1>Privacy Policy</h1>
-      <p className="text-muted-foreground">Last updated: 2026-04-28</p>
+    <article className="container max-w-3xl py-12 prose prose-invert prose-headings:tracking-tight prose-p:text-foreground/85 prose-li:text-foreground/85">
+      <p className="eyebrow !mt-0 not-prose">Legal</p>
+      <h1 className="!mb-2">Privacy Policy</h1>
+      <p className="not-prose font-mono text-[11px] uppercase tracking-wider text-muted-foreground">Last updated 2026-04-28</p>
 
       <h2>What we collect</h2>
       <ul>
@@ -56,7 +57,7 @@ export default function PrivacyPage() {
         <li>Portability — export your data</li>
       </ul>
       <p>
-        Email <a href="mailto:harsh2995@gmail.com">harsh2995@gmail.com</a> to exercise any of these.
+        Email <a href="mailto:hello@diamondhands.space">hello@diamondhands.space</a> to exercise any of these.
       </p>
 
       <h2>Data retention</h2>
@@ -80,7 +81,7 @@ export default function PrivacyPage() {
 
       <h2>Contact</h2>
       <p>
-        Questions? Email <a href="mailto:harsh2995@gmail.com">harsh2995@gmail.com</a>.
+        Questions? Email <a href="mailto:hello@diamondhands.space">hello@diamondhands.space</a>.
       </p>
     </article>
   );

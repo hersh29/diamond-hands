@@ -9,14 +9,12 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { DiamondMark } from "@/components/diamond-mark";
 import { createClient } from "@/lib/supabase/client";
 
 interface Props {
-  /** Pre-acknowledgement state from the server. If true, modal stays closed. */
   initialAccepted: boolean;
   userId: string;
 }
@@ -43,31 +41,40 @@ export function DisclaimerModal({ initialAccepted, userId }: Props) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={() => { /* user must click Accept */ }}>
+    <Dialog open={open} onOpenChange={() => { /* require acknowledgement */ }}>
       <DialogContent
+        hideClose
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
-        className="sm:max-w-lg"
+        className="terminal-card sm:max-w-lg"
       >
         <DialogHeader className="space-y-3">
-          <div><DiamondMark size={28} /></div>
-          <DialogTitle className="text-xl">Welcome to DiamondHands</DialogTitle>
-          <DialogDescription className="space-y-2 text-sm leading-relaxed text-muted-foreground">
-            Before you continue, please understand:
-          </DialogDescription>
+          <div className="flex items-center gap-2">
+            <DiamondMark size={22} />
+            <span className="eyebrow">First-run check</span>
+          </div>
+          <DialogTitle className="text-2xl tracking-tight">Welcome to DiamondHands</DialogTitle>
         </DialogHeader>
 
-        <ul className="list-disc space-y-2 pl-5 text-sm text-foreground/90">
-          <li>This is a research and education tool, not investment advice.</li>
-          <li>We do not recommend any specific investments.</li>
-          <li>Hypothetical backtest results do not guarantee future returns.</li>
-          <li>
-            Always do your own research and consult a licensed financial advisor
-            before making investment decisions.
-          </li>
+        <p className="text-sm text-muted-foreground">
+          Before you continue, please acknowledge:
+        </p>
+
+        <ul className="space-y-2 text-sm text-foreground/90">
+          {[
+            "This is a research and education tool, not investment advice.",
+            "We do not recommend any specific investments.",
+            "Hypothetical backtest results do not guarantee future returns.",
+            "Always do your own research and consult a licensed financial advisor before making investment decisions.",
+          ].map((line) => (
+            <li key={line} className="flex items-start gap-3">
+              <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary" />
+              <span className="leading-relaxed">{line}</span>
+            </li>
+          ))}
         </ul>
 
-        <p className="text-xs text-muted-foreground">
+        <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground/70">
           Read the full{" "}
           <Link href="/legal/disclaimer" target="_blank" className="underline">
             disclaimer
@@ -82,7 +89,7 @@ export function DisclaimerModal({ initialAccepted, userId }: Props) {
           </Link>
         </p>
 
-        <Button onClick={handleAccept} disabled={pending} className="w-full">
+        <Button onClick={handleAccept} disabled={pending} size="lg" className="w-full">
           {pending ? "Saving…" : "I understand"}
         </Button>
       </DialogContent>

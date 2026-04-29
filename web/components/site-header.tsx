@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
 import { DiamondMark } from "@/components/diamond-mark";
 import { UserMenu } from "@/components/user-menu";
+import { MobileNav } from "@/components/mobile-nav";
 
 const navLinks = [
   { href: "/backtest", label: "Backtest" },
@@ -17,8 +18,8 @@ export async function SiteHeader() {
   } = await supabase.auth.getUser();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/50 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/65">
-      <div className="container flex h-14 items-center justify-between">
+    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/65">
+      <div className="container flex h-14 items-center justify-between gap-2">
         <Link
           href="/"
           className="inline-flex items-center gap-2 text-foreground transition-colors hover:text-primary"
@@ -40,18 +41,21 @@ export async function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          {user ? (
-            <UserMenu email={user.email ?? ""} />
-          ) : (
-            <>
-              <Button asChild variant="ghost" size="sm">
-                <Link href="/login">Log in</Link>
-              </Button>
-              <Button asChild size="sm">
-                <Link href="/signup">Sign up</Link>
-              </Button>
-            </>
-          )}
+          <div className="hidden md:flex md:items-center md:gap-2">
+            {user ? (
+              <UserMenu email={user.email ?? ""} />
+            ) : (
+              <>
+                <Button asChild variant="ghost" size="sm">
+                  <Link href="/login">Log in</Link>
+                </Button>
+                <Button asChild size="sm">
+                  <Link href="/signup">Sign up</Link>
+                </Button>
+              </>
+            )}
+          </div>
+          <MobileNav user={user ? { email: user.email ?? "" } : null} />
         </div>
       </div>
     </header>

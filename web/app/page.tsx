@@ -80,7 +80,7 @@ export default async function HomePage(
       </section>
 
       <section className="container pb-24">
-        <Card className="overflow-hidden border-border/80">
+        <Card className="terminal-card overflow-hidden">
           <div className="grid gap-0 md:grid-cols-2">
             <div className="border-b border-border/60 p-8 md:border-b-0 md:border-r md:p-12">
               <div className="inline-flex items-center gap-2 text-primary">
@@ -139,7 +139,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 function Feature({ icon, title, body }: { icon: React.ReactNode; title: string; body: string }) {
   return (
-    <Card className="p-6 transition-colors hover:border-primary/40">
+    <Card className="terminal-card p-6 transition-colors hover:border-primary/40">
       <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-md bg-primary/10 text-primary">
         {icon}
       </div>

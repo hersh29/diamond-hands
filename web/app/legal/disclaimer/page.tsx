@@ -2,9 +2,10 @@ export const metadata = { title: "Disclaimer" };
 
 export default function DisclaimerPage() {
   return (
-    <article className="container max-w-3xl py-12 prose prose-invert prose-headings:tracking-tight">
-      <h1>Investment Disclaimer</h1>
-      <p className="text-muted-foreground">Last updated: 2026-04-28</p>
+    <article className="container max-w-3xl py-12 prose prose-invert prose-headings:tracking-tight prose-p:text-foreground/85 prose-li:text-foreground/85">
+      <p className="eyebrow !mt-0 not-prose">Legal</p>
+      <h1 className="!mb-2">Investment Disclaimer</h1>
+      <p className="not-prose font-mono text-[11px] uppercase tracking-wider text-muted-foreground">Last updated 2026-04-28</p>
 
       <h2>Educational tool, not investment advice</h2>
       <p>

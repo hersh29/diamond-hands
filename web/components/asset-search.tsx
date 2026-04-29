@@ -52,7 +52,10 @@ export function AssetSearch({ onPick }: { onPick: (asset: AssetResult) => void }
           <Plus className="h-4 w-4" /> Add asset…
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[420px] p-0" align="start">
+      <PopoverContent
+        className="w-[calc(100vw-2rem)] max-w-[420px] p-0"
+        align="start"
+      >
         <Command shouldFilter={false}>
           <CommandInput
             value={q}

@@ -41,7 +41,7 @@ export function DeletePortfolioButton({ portfolioId, portfolioName }: Props) {
 
   return (
     <>
-      <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>
+      <Button variant="ghost" size="sm" onClick={() => setOpen(true)} aria-label="Delete portfolio">
         <Trash2 className="h-4 w-4" />
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>

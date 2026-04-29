@@ -4,6 +4,23 @@ Append-only. Newest decisions at the top. Each entry: what we decided, why, what
 
 ---
 
+## 2026-04-28 — No Next.js middleware
+
+**Decision:** No `web/middleware.ts`. Auth session is read on each server component / API route via `await supabase.auth.getUser()`.
+
+**Why:** Vercel runs middleware on the Edge Runtime by default. `@supabase/ssr` transitively pulls in `@supabase/realtime-js`, which references `__dirname` at runtime — a Node-only global. Result: `ReferenceError: __dirname is not defined` at request time, hard 500s the entire site.
+
+**Considered:**
+- `experimental.nodeMiddleware: true` + `runtime: 'nodejs'` in middleware config — possible in Next 15.2+, but experimental and adds risk.
+- Webpack/turbopack hack to alias `__dirname` to `''` — fragile.
+- Skipping `@supabase/ssr` and using `@supabase/supabase-js` directly with manual cookie wiring — too much custom code.
+
+**Trade-off:** Without middleware, session refresh is lazy: when a user with an expired token hits a server-rendered page, the SDK refreshes the token but can't set the new cookie (RSC limitation). They appear logged out for that single request; the next request fixes it. For our anonymous-mostly product this is invisible.
+
+**Reverse if:** Token expiry becomes a real UX problem AND the @supabase/realtime-js issue is fixed upstream OR Next.js Node-runtime middleware is stable enough to rely on.
+
+---
+
 ## 2026-04-28 — Tailwind v3 over v4
 
 **Decision:** Tailwind v3.4 for the web app.

@@ -126,6 +126,29 @@ type BacktestParams = {
 - **Daily** (`ingest/ingest_prices.py`): GitHub Actions cron at 22:00 UTC. For each active asset, fetches from `last_price_date + 1` to today. Upserts. Updates `assets.last_price_date`.
 - **Crypto symbols**: yfinance uses `BTC-USD` format; we store as `BTC-USD` in `symbol`. UI displays as `BTC`.
 
+## Paper trading
+
+Lives under `/paper`. Designed around an immutable transaction log — we never mutate balances directly; everything derives from the `transactions` table and the latest known prices.
+
+**State derivation** (`lib/paper/compute.ts`):
+- Replay all transactions chronologically.
+- `deposit` / `withdraw` / `dividend` adjust cash balance and net contributions.
+- `buy` / `sell` adjust per-asset positions; cost basis tracked using **average-cost method**.
+- Sells reduce cost basis proportionally to shares sold.
+
+**NAV chart** (`lib/paper/nav.ts`):
+- Walks the price matrix day by day, applying transactions on their execution dates.
+- Produces `{date, value, contributed, benchmark?}` series.
+- Benchmark line ("if same cash flow had bought SPY") makes the comparison contribution-aware — fair against DCA strategies.
+
+**CSV import** (`lib/paper/csv.ts`):
+- Auto-detects format from header columns (Robinhood / Fidelity / Schwab / Vanguard / generic).
+- Normalizes to `{symbol, shares, costBasis, openedAt?}`.
+- API route auto-creates a `deposit` transaction equal to total cost so cash stays consistent.
+- Skips unsupported tickers (not in our `assets` table) and reports them in the response.
+
+**Trade dialog**: three tabs — Buy (search asset, shares, price, fees, date), Sell (with max-shares hint), Cash (deposit / withdraw / dividend).
+
 ## Sharing & SEO
 
 - Saved scenarios get a **6-char slug** (nanoid), stored at `scenarios.share_slug`.
