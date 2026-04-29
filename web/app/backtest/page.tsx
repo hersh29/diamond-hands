@@ -1,6 +1,7 @@
 import { BacktestRunner } from "@/components/backtest-runner";
 import { BacktestRunnerBasic } from "@/components/backtest-runner-basic";
-import { BacktestModeToggle, modeFromSearchParams } from "@/components/backtest-mode-toggle";
+import { BacktestModeToggle } from "@/components/backtest-mode-toggle";
+import { modeFromSearchParams } from "@/lib/backtest/mode";
 
 export const metadata = {
   title: "Backtest a portfolio",

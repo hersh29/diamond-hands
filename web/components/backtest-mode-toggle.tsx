@@ -2,13 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import type { BacktestMode } from "@/lib/backtest/mode";
 
 const MODES = [
   { id: "basic",    label: "Basic" },
   { id: "advanced", label: "Advanced" },
 ] as const;
-
-export type BacktestMode = (typeof MODES)[number]["id"];
 
 interface Props {
   mode: BacktestMode;
@@ -50,9 +49,4 @@ export function BacktestModeToggle({ mode }: Props) {
       })}
     </div>
   );
-}
-
-export function modeFromSearchParams(sp: { mode?: string | string[] | undefined }): BacktestMode {
-  const raw = Array.isArray(sp.mode) ? sp.mode[0] : sp.mode;
-  return raw === "advanced" ? "advanced" : "basic";
 }
