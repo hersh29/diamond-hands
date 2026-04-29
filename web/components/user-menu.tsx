@@ -1,9 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { LogOut, User } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { signOutAction } from "@/app/auth/actions";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -17,15 +16,6 @@ interface Props {
 }
 
 export function UserMenu({ email, displayName }: Props) {
-  const router = useRouter();
-
-  const handleSignOut = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    router.refresh();
-    router.push("/");
-  };
-
   // Prefer first name from full display name; fall back to email local-part.
   const triggerLabel =
     (displayName && displayName.trim().split(/\s+/)[0]) ||
@@ -54,12 +44,14 @@ export function UserMenu({ email, displayName }: Props) {
         >
           <User className="h-4 w-4" /> Dashboard
         </Link>
-        <button
-          onClick={handleSignOut}
-          className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm hover:bg-secondary"
-        >
-          <LogOut className="h-4 w-4" /> Sign out
-        </button>
+        <form action={signOutAction}>
+          <button
+            type="submit"
+            className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm hover:bg-secondary"
+          >
+            <LogOut className="h-4 w-4" /> Sign out
+          </button>
+        </form>
       </PopoverContent>
     </Popover>
   );

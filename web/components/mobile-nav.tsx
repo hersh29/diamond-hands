@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { LogOut, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/client";
+import { signOutAction } from "@/app/auth/actions";
 import { DiamondMark } from "@/components/diamond-mark";
 
 interface NavLink {
@@ -26,7 +26,6 @@ interface Props {
 
 export function MobileNav({ user }: Props) {
   const pathname = usePathname();
-  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   // Auto-close menu on route change
@@ -43,14 +42,6 @@ export function MobileNav({ user }: Props) {
       };
     }
   }, [open]);
-
-  const signOut = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    setOpen(false);
-    router.refresh();
-    router.push("/");
-  };
 
   return (
     <>
@@ -107,13 +98,14 @@ export function MobileNav({ user }: Props) {
                   >
                     Dashboard
                   </Link>
-                  <button
-                    type="button"
-                    onClick={signOut}
-                    className="flex items-center gap-2 rounded-md px-3 py-3 text-left text-base font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground"
-                  >
-                    <LogOut className="h-4 w-4" /> Sign out
-                  </button>
+                  <form action={signOutAction}>
+                    <button
+                      type="submit"
+                      className="flex w-full items-center gap-2 rounded-md px-3 py-3 text-left text-base font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground"
+                    >
+                      <LogOut className="h-4 w-4" /> Sign out
+                    </button>
+                  </form>
                   <div className="mt-2 px-3">
                     {user.displayName && (
                       <p className="truncate text-sm font-medium">{user.displayName}</p>
