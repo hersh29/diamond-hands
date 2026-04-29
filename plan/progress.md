@@ -2,6 +2,34 @@
 
 Latest entries at the top.
 
+## 2026-04-29 (late) — Hardening pass: form polish, scroll, defensive layout
+
+### What changed
+- **Form inputs polished**: Native browser number-input spinner buttons are now hidden globally (Chromium + Firefox + Safari). Eliminates the "crooked boxes" look in the trade dialog where Shares had spinners but `$`-prefixed fields didn't.
+- **Asset search popover scrolls reliably**: switched `CommandList` to inline `style={{ maxHeight: "min(400px, 60vh)", WebkitOverflowScrolling: "touch" }}` so the height isn't dependent on Tailwind JIT picking up the arbitrary value. Adds `overscroll-contain` so scrolling inside the dropdown doesn't bubble to the dialog/page.
+- **Site header is now defensive**: the `profiles` lookup in `SiteHeader` is wrapped in try/catch. Previously a single failing query (RLS mismatch, missing row, network blip) would crash the layout and take *every page* down via the "Server Components render" generic error. Falls back to `auth.users.user_metadata.full_name`/`name` if the profile row is empty, then to email local-part.
+- **KpiBar reverted to clean divide utilities**: `divide-x divide-y divide-border/60 sm:divide-y-0` produces correct dividers on both 2×2 mobile and 1×4 desktop without the fragile `:nth-child` border hack.
+
+### Suspected root cause of the recurring `/backtest` "Something broke" page
+Most likely the layout-level header was crashing on the profile fetch — that error propagates to *every* page, but the deep ones (with more JSX to render) are most visible. With the header now defensive, repeat occurrences shouldn't take the site down. Vercel runtime logs should show useful errors instead of generic Server Components failures.
+
+### Open follow-ups for next session
+- [ ] Confirm `/backtest` works end-to-end with a fresh user
+- [ ] Confirm the 15-month simulate warning is gone after a full backfill
+- [ ] Check Supabase `profiles` table for any missing rows from older OAuth signups; backfill if needed:
+  ```sql
+  insert into public.profiles (id, display_name, avatar_url)
+  select u.id,
+         coalesce(u.raw_user_meta_data->>'full_name', u.raw_user_meta_data->>'name', split_part(u.email, '@', 1)),
+         u.raw_user_meta_data->>'avatar_url'
+    from auth.users u
+   left join public.profiles p on p.id = u.id
+   where p.id is null;
+  ```
+- [ ] Once the user runs the SQL above, the trigger handles all future signups automatically.
+
+---
+
 ## 2026-04-29 — Backtest modes (Basic/Advanced) + Simulate (Monte Carlo)
 
 ### What shipped

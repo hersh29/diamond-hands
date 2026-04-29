@@ -18,14 +18,31 @@ export async function SiteHeader() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Profile fetch is best-effort — never let it crash the layout.
+  // Falls back to email-based display name if anything goes wrong.
   let displayName: string | null = null;
   if (user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("display_name")
-      .eq("id", user.id)
-      .maybeSingle();
-    displayName = (profile?.display_name as string | null) ?? null;
+    try {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("display_name")
+        .eq("id", user.id)
+        .maybeSingle();
+      displayName = (profile?.display_name as string | null) ?? null;
+    } catch (err) {
+      // RLS, network, missing-table — silently fall back.
+      console.error("[site-header] profile lookup failed", err);
+    }
+  }
+
+  // Fallback: pull the OAuth full_name from auth metadata if profile is empty.
+  if (user && !displayName) {
+    const meta = user.user_metadata as Record<string, unknown> | undefined;
+    const candidate =
+      (typeof meta?.full_name === "string" && meta.full_name) ||
+      (typeof meta?.name      === "string" && meta.name)      ||
+      null;
+    displayName = candidate;
   }
 
   const userInfo = user ? { email: user.email ?? "", displayName } : null;

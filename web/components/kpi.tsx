@@ -52,29 +52,17 @@ export function Kpi({ label, value, delta, deltaTone = "neutral", size = "md", c
 
 /**
  * KPI bar — divided cells, terminal aesthetic.
- * Renders 2 columns on small screens, 4 on sm+.
+ * 2 columns × 2 rows on mobile (with both vertical + horizontal dividers),
+ * 4 columns × 1 row on sm+ (vertical dividers only).
  */
 export function KpiBar({ children }: { children: React.ReactNode }) {
   return (
-    <div className="terminal-card grid grid-cols-2 divide-border/60 sm:grid-cols-4">
+    <div className="terminal-card grid grid-cols-2 divide-x divide-y divide-border/60 sm:grid-cols-4 sm:divide-y-0">
       {children}
     </div>
   );
 }
 
 export function KpiCell({ children, className }: { children: React.ReactNode; className?: string }) {
-  return (
-    <div
-      className={cn(
-        "min-w-0 border-border/60 p-5",
-        // Borders simulate dividers without conflicting on different layouts
-        "border-l first:border-l-0",
-        "[&:nth-child(n+3)]:border-t sm:[&:nth-child(n+3)]:border-t-0",
-        "sm:[&:nth-child(n+5)]:border-t",
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
+  return <div className={cn("min-w-0 p-5", className)}>{children}</div>;
 }

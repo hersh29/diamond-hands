@@ -21,6 +21,26 @@ Append-only. Newest decisions at the top. Each entry: what we decided, why, what
 
 ---
 
+## 2026-04-29 — Layout-level data fetches must be defensive
+
+**Decision:** Any database query in `<SiteHeader>` (or anywhere else in the root layout) is wrapped in try/catch with a sensible fallback. If it throws, the layout still renders.
+
+**Why:** A single failing query in the layout takes down every page in the app via "Server Components render" errors. Production builds suppress the actual stack, so debugging is "the entire site is broken" → "something is wrong somewhere." Burned us at least once on the `profiles` fetch.
+
+**Reverse if:** We move user data fetches out of the layout entirely (e.g. into per-page server components or a context provider).
+
+---
+
+## 2026-04-29 — Hide native number-input spinners
+
+**Decision:** Globally suppress browser-native spinner buttons on `input[type="number"]`. Inputs use arrow keys for increment instead.
+
+**Why:** Default spinners look different in every browser, make `$`-prefixed and bare inputs visually inconsistent, and waste horizontal space inside compact form layouts.
+
+**Reverse if:** We add a stepper-style picker that needs the increment buttons (likely never; we'd build a custom one).
+
+---
+
 ## 2026-04-28 — Tailwind v3 over v4
 
 **Decision:** Tailwind v3.4 for the web app.
