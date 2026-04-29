@@ -53,16 +53,21 @@ export function AssetSearch({ onPick }: { onPick: (asset: AssetResult) => void }
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-[calc(100vw-2rem)] max-w-[420px] p-0"
+        className="flex w-[calc(100vw-2rem)] max-w-[420px] flex-col overflow-hidden p-0"
+        style={{
+          maxHeight:
+            "min(60vh, var(--radix-popover-content-available-height, 60vh))",
+        }}
         align="start"
+        collisionPadding={16}
       >
-        <Command shouldFilter={false}>
+        <Command shouldFilter={false} className="flex min-h-0 flex-1 flex-col">
           <CommandInput
             value={q}
             onValueChange={setQ}
             placeholder="Search by ticker or name…"
           />
-          <CommandList>
+          <CommandList className="min-h-0 flex-1">
             {loading && q.length > 0 && <div className="p-3 text-xs text-muted-foreground">Searching…</div>}
             <CommandEmpty>No assets matched.</CommandEmpty>
             <CommandGroup heading="Assets">
