@@ -126,6 +126,22 @@ type BacktestParams = {
 - **Daily** (`ingest/ingest_prices.py`): GitHub Actions cron at 22:00 UTC. For each active asset, fetches from `last_price_date + 1` to today. Upserts. Updates `assets.last_price_date`.
 - **Crypto symbols**: yfinance uses `BTC-USD` format; we store as `BTC-USD` in `symbol`. UI displays as `BTC`.
 
+## Forward simulation
+
+Lives at `/simulate`. Pure TypeScript Monte Carlo in `lib/simulate/engine.ts`.
+
+**Algorithm:**
+1. Compute the portfolio's daily weighted returns from the historical price matrix.
+2. Aggregate into monthly compound returns.
+3. For each of N simulations (500 / 1000 / 2000), build a forward path of M months by **sampling monthly returns with replacement**, applying contributions on schedule.
+4. At each projected month, compute percentile bands (p5 / p25 / p50 / p75 / p95) across all paths.
+5. End-of-horizon stats: median, p5, p95 with approximate CAGR.
+6. Probability metrics: P(losing money), P(doubling), optional P(reaching goal).
+
+**Why bootstrap, not GBM?** Bootstrap preserves the empirical distribution of returns including fat tails. Geometric Brownian Motion would assume normality, which is wrong for asset returns. We do however model returns as i.i.d. — autocorrelation and regime changes are deliberately not modeled, and that's in the disclaimer.
+
+**Compute budget:** 2000 sims × 360 months × 4 ops ≈ 3M ops. Runs in <1 sec in the browser. Capped at 5000 sims as a safety floor.
+
 ## Paper trading
 
 Lives under `/paper`. Designed around an immutable transaction log — we never mutate balances directly; everything derives from the `transactions` table and the latest known prices.

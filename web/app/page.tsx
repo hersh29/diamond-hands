@@ -68,21 +68,26 @@ export default async function HomePage(
 
       <section className="container py-16">
         <SectionLabel>What you can do</SectionLabel>
-        <div className="mt-6 grid gap-3 md:grid-cols-3">
+        <div className="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
           <Feature
             icon={<LineChart className="h-5 w-5" />}
-            title="Historical backtest"
-            body="Mix US stocks, ETFs, and crypto. Lump sum or DCA. Rebalance on any schedule. Compare against SPY out of the box."
+            title="Backtest"
+            body="Basic or advanced. Single asset or multi-asset portfolio. Lump sum or DCA. Compare against SPY."
+          />
+          <Feature
+            icon={<Activity className="h-5 w-5" />}
+            title="Simulate"
+            body="Project forward outcomes by sampling historical returns. See the full distribution: 5th to 95th percentile."
           />
           <Feature
             icon={<Wallet className="h-5 w-5" />}
-            title="Paper trading"
-            body="Import positions from your broker via CSV. Simulate buys and sells with virtual cash. Track performance vs SPY."
+            title="Paper trade"
+            body="Import positions from your broker via CSV. Simulate buys and sells with virtual cash. Track vs SPY."
           />
           <Feature
             icon={<Sparkles className="h-5 w-5" />}
-            title="Shareable scenarios"
-            body="Save a backtest, get a public link with a custom preview card. Anonymous saves allowed — sign up only when you want history."
+            title="Share scenarios"
+            body="Save any backtest, get a public link with a custom preview card. Anonymous saves allowed."
           />
         </div>
       </section>

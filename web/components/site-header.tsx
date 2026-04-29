@@ -7,6 +7,7 @@ import { MobileNav } from "@/components/mobile-nav";
 
 const navLinks = [
   { href: "/backtest", label: "Backtest" },
+  { href: "/simulate", label: "Simulate" },
   { href: "/paper",    label: "Paper trade" },
   { href: "/explore",  label: "Explore" },
 ];

@@ -20,10 +20,11 @@ Constraint: solo dev, $5/mo recurring spend cap until paying users arrive. Stack
 
 ### Phase 1 — Backtester ✅ shipped
 - Asset search (top US stocks + ETFs + crypto)
-- Portfolio builder (multi-asset weights)
-- Lump sum + DCA backtest, client-side TS engine
+- **Basic mode** ("What if I'd invested X in Y in YYYY?") — single-asset, year-preset, hero outcome
+- **Advanced mode** — multi-asset portfolio builder, lump sum + DCA, rebalancing
+- Mode toggle with URL state for shareability
 - Charts: equity curve, drawdown
-- Metrics: CAGR, volatility, Sharpe, max drawdown, total return, best/worst year
+- Metrics: CAGR, volatility, Sharpe, max drawdown, total return, best/worst year, year-by-year breakdown
 - SPY benchmark overlay with contribution-aware comparison
 - Save scenario → public share URL → OG image
 - First-run disclaimer modal
@@ -37,9 +38,9 @@ Constraint: solo dev, $5/mo recurring spend cap until paying users arrive. Stack
 - Holdings table with avg-cost cost basis + per-row Buy/Sell quick actions
 - Transaction history
 
-### Phase 3 — Strategies & polish (next)
+### Phase 3 — Strategies & polish (in progress)
+- ✅ **Monte Carlo simulation (`/simulate`)** — bootstrapped historical returns, percentile bands, probability metrics
 - Rule-based strategy builder (rebalance triggers, DCA schedules)
-- Monte Carlo retirement projection (bootstrapped historical returns)
 - Asset correlation matrix, efficient frontier
 - Email digests (Resend) — weekly performance summaries
 - Monthly returns heatmap

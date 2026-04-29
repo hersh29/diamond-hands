@@ -351,7 +351,7 @@ function computeVolatility(curve: EquityPoint[]): number {
   return Math.sqrt(variance) * Math.sqrt(TRADING_DAYS_PER_YEAR);
 }
 
-function computeYearlyReturns(curve: EquityPoint[]): { year: number; return: number }[] {
+export function computeYearlyReturns(curve: EquityPoint[]): { year: number; return: number }[] {
   const byYear = new Map<number, EquityPoint[]>();
   for (const p of curve) {
     const y = Number(p.date.slice(0, 4));

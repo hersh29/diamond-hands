@@ -2,6 +2,47 @@
 
 Latest entries at the top.
 
+## 2026-04-29 — Backtest modes (Basic/Advanced) + Simulate (Monte Carlo)
+
+### What shipped
+
+**Backtest mode toggle**
+- `/backtest` now defaults to **Basic** mode and supports `?mode=advanced` for the full builder.
+- `BacktestModeToggle` component swaps the two runners and updates the URL, so the mode is shareable.
+- Page heading + subhead change per mode for clarity.
+
+**Basic mode (`<BacktestRunnerBasic>`)**
+- "What if I'd invested" UX: amount, single asset (via search), starting year (preset chips for 5y/10y/15y/20y ago + custom input).
+- Results: hero KPI showing today's value, headline KPI bar (Total return, CAGR, Best year, Worst year), equity curve, year-by-year breakdown.
+- Designed to be the viral / shareable surface — single answer to a single question.
+
+**Yearly returns table (`<YearlyReturnsTable>`)**
+- Reusable bar-chart-style breakdown (left red / right green from a center axis).
+- Mounted in Basic mode; can be added to Advanced + share pages too.
+
+**Simulate (`/simulate`)**
+- Pure-TS Monte Carlo engine in `lib/simulate/engine.ts`.
+- Bootstrap-resamples portfolio's historical monthly returns into N forward paths.
+- Computes percentile bands at every projected month: p5 / p25 / p50 / p75 / p95.
+- End-of-horizon stats: median, worst-5%, best-5%, with CAGR for each.
+- Probability metrics: P(losing), P(doubling), and optional P(reaching goal).
+- Frontend: portfolio builder (reused), horizon presets (5y/10y/20y/30y), starting amount, monthly contribution, optional goal, sim count (500/1000/2000).
+- `<SimulationFanChart>` renders stacked area bands + median line + cumulative-contributions reference.
+- Bounded to 5,000 sims max to stay browser-safe.
+
+**Navigation**
+- Header, footer, mobile-nav, and home page Features all include "Simulate".
+- `sitemap.ts` includes `/simulate`.
+
+### Notes
+
+- Simulation samples from the past **10 years** of returns by default. We can expose this as a parameter later (e.g. choose post-2008 vs. full history).
+- CAGR with contributions is approximate — quantile distortion is small enough that the directional answer holds. A money-weighted IRR per quantile would be more rigorous; not worth the complexity yet.
+- Percentile fan chart uses stacked Recharts areas; on very long horizons the bottom anchor gets thin but readable. Might switch to dedicated band primitive later.
+- The simulation deliberately doesn't model: changing volatility regimes, autocorrelation between months, fat-tail events beyond what's in the sample, fees, taxes. That's all in the disclaimer.
+
+---
+
 ## 2026-04-28 (late) — Production readiness: fonts, mobile, cleanup, error handling
 
 ### Fonts

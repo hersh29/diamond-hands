@@ -15,6 +15,7 @@ interface NavLink {
 
 const PRIMARY: NavLink[] = [
   { href: "/backtest", label: "Backtest" },
+  { href: "/simulate", label: "Simulate" },
   { href: "/paper",    label: "Paper trade" },
   { href: "/explore",  label: "Explore" },
 ];

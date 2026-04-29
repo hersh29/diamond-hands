@@ -25,6 +25,7 @@ export function SiteFooter() {
 
           <FooterCol heading="Product">
             <FooterLink href="/backtest">Backtest</FooterLink>
+            <FooterLink href="/simulate">Simulate</FooterLink>
             <FooterLink href="/paper">Paper trade</FooterLink>
             <FooterLink href="/explore">Explore</FooterLink>
           </FooterCol>
