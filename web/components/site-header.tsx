@@ -18,6 +18,18 @@ export async function SiteHeader() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  let displayName: string | null = null;
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("display_name")
+      .eq("id", user.id)
+      .maybeSingle();
+    displayName = (profile?.display_name as string | null) ?? null;
+  }
+
+  const userInfo = user ? { email: user.email ?? "", displayName } : null;
+
   return (
     <header className="sticky top-0 z-50 border-b border-border/50 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/65">
       <div className="container flex h-14 items-center justify-between gap-2">
@@ -43,8 +55,8 @@ export async function SiteHeader() {
 
         <div className="flex items-center gap-2">
           <div className="hidden md:flex md:items-center md:gap-2">
-            {user ? (
-              <UserMenu email={user.email ?? ""} />
+            {userInfo ? (
+              <UserMenu email={userInfo.email} displayName={userInfo.displayName} />
             ) : (
               <>
                 <Button asChild variant="ghost" size="sm">
@@ -56,7 +68,7 @@ export async function SiteHeader() {
               </>
             )}
           </div>
-          <MobileNav user={user ? { email: user.email ?? "" } : null} />
+          <MobileNav user={userInfo} />
         </div>
       </div>
     </header>

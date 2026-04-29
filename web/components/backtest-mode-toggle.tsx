@@ -1,11 +1,11 @@
 "use client";
 
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const MODES = [
-  { id: "basic",    label: "Basic",    hint: "Single asset, single year" },
-  { id: "advanced", label: "Advanced", hint: "Multi-asset, DCA, rebalancing" },
+  { id: "basic",    label: "Basic" },
+  { id: "advanced", label: "Advanced" },
 ] as const;
 
 export type BacktestMode = (typeof MODES)[number]["id"];
@@ -16,14 +16,11 @@ interface Props {
 
 export function BacktestModeToggle({ mode }: Props) {
   const router = useRouter();
-  const pathname = usePathname();
-  const search = useSearchParams();
 
   const setMode = (next: BacktestMode) => {
-    const params = new URLSearchParams(search.toString());
-    if (next === "basic") params.delete("mode");
-    else params.set("mode", next);
-    router.replace(`${pathname}${params.toString() ? `?${params.toString()}` : ""}`);
+    if (next === mode) return;
+    if (next === "basic") router.replace("/backtest");
+    else router.replace(`/backtest?mode=${next}`);
   };
 
   return (

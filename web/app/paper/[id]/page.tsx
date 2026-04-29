@@ -137,7 +137,7 @@ export default async function PaperDetailPage(
             <Kpi
               label="Total value"
               value={formatCurrency(summary.totalValue)}
-              size="xl"
+              size="lg"
             />
           </KpiCell>
           <KpiCell>
@@ -146,18 +146,18 @@ export default async function PaperDetailPage(
               value={`${positive ? "+" : ""}${formatCurrency(summary.totalReturn)}`}
               delta={`${positive ? "+" : ""}${formatPercent(summary.totalReturnPct)}`}
               deltaTone={positive ? "profit" : "loss"}
-              size="lg"
+              size="md"
               className={positive ? "text-profit" : "text-loss"}
             />
           </KpiCell>
           <KpiCell>
-            <Kpi label="Cash" value={formatCurrency(summary.cashBalance)} size="lg" />
+            <Kpi label="Cash" value={formatCurrency(summary.cashBalance)} size="md" />
           </KpiCell>
           <KpiCell>
             <Kpi
               label="Positions"
               value={String(holdings.length)}
-              size="lg"
+              size="md"
               hint={`${formatCurrency(summary.marketValue)} market value`}
             />
           </KpiCell>

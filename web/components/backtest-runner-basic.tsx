@@ -181,7 +181,7 @@ export function BacktestRunnerBasic() {
                 <p className="eyebrow">You&apos;d have today</p>
                 <p
                   className={cn(
-                    "display-num mt-2 text-4xl leading-none md:text-6xl",
+                    "display-num mt-2 text-3xl leading-tight md:text-5xl",
                     positive ? "text-foreground" : "text-loss",
                   )}
                 >

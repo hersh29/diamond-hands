@@ -21,9 +21,11 @@ export function runSimulation(
   matrix: PriceMatrix,
 ): SimulateResult {
   const monthlyReturns = computePortfolioMonthlyReturns(params.assets, matrix);
-  if (monthlyReturns.length < 12) {
+  if (monthlyReturns.length < 24) {
     throw new Error(
-      "Not enough historical data to simulate. Need at least one year of prices.",
+      `Only ${monthlyReturns.length} months of overlapping history were found for these assets. ` +
+      `We need at least 24 months for a meaningful simulation. ` +
+      `Pick assets with longer history, or run the daily price ingest if it hasn't completed.`,
     );
   }
 

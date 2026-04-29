@@ -263,11 +263,11 @@ function SimulateResults({
       <KpiBar>
         <KpiCell>
           <Kpi
-            label={`Median outcome (${horizon}y)`}
+            label={`Median outcome · ${horizon}y`}
             value={formatCurrency(result.median.endValue)}
             delta={`${positive ? "+" : ""}${formatPercent(result.median.cagr * 100)} CAGR`}
             deltaTone={positive ? "profit" : "loss"}
-            size="xl"
+            size="lg"
           />
         </KpiCell>
         <KpiCell>
@@ -275,7 +275,7 @@ function SimulateResults({
             label="Worst 5%"
             value={formatCurrency(result.p5.endValue)}
             delta={`${formatPercent(result.p5.cagr * 100)} CAGR`}
-            size="lg"
+            size="md"
             className="text-loss"
           />
         </KpiCell>
@@ -284,7 +284,7 @@ function SimulateResults({
             label="Best 5%"
             value={formatCurrency(result.p95.endValue)}
             delta={`${formatPercent(result.p95.cagr * 100)} CAGR`}
-            size="lg"
+            size="md"
             className="text-profit"
           />
         </KpiCell>
@@ -292,7 +292,7 @@ function SimulateResults({
           <Kpi
             label="Total contributed"
             value={formatCurrency(result.totalContributed)}
-            size="lg"
+            size="md"
           />
         </KpiCell>
       </KpiBar>

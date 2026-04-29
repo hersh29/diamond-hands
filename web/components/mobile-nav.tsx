@@ -21,7 +21,7 @@ const PRIMARY: NavLink[] = [
 ];
 
 interface Props {
-  user: { email: string } | null;
+  user: { email: string; displayName?: string | null } | null;
 }
 
 export function MobileNav({ user }: Props) {
@@ -114,9 +114,14 @@ export function MobileNav({ user }: Props) {
                   >
                     <LogOut className="h-4 w-4" /> Sign out
                   </button>
-                  <p className="mt-2 px-3 font-mono text-[10px] uppercase tracking-wider text-muted-foreground/60 truncate">
-                    {user.email}
-                  </p>
+                  <div className="mt-2 px-3">
+                    {user.displayName && (
+                      <p className="truncate text-sm font-medium">{user.displayName}</p>
+                    )}
+                    <p className="truncate font-mono text-[10px] uppercase tracking-wider text-muted-foreground/60">
+                      {user.email}
+                    </p>
+                  </div>
                 </div>
               ) : (
                 <div className="mt-3 flex flex-col gap-1">
